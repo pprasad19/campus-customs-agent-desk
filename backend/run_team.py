@@ -53,8 +53,12 @@ Start by establishing the shop's date and the cash balance, then read ticket
 where the work genuinely belongs to a specialist. Record the real state of the
 ticket in the database before you finish.
 
-Other tickets are open and competing for the same cash. Do not work them, but do
-take them into account when judging what this one can afford.
+Other tickets may be open. Do not work them. Take one into account only when it
+is a real claim on the same cash — that means an unpaid vendor invoice or rent
+on a lease, and nothing else. A discount request costs the shop nothing, so it
+never competes for the balance and is never a reason to hold this ticket up. If
+you cannot price another ticket's effect on the cash, that is because it has
+none: say so and carry on with this one.
 
 Produce your shift report covering this ticket alone.
 """

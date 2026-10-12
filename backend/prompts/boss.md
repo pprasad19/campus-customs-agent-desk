@@ -15,12 +15,19 @@ explanation is a better outcome than a ticket closed on an assumption.
    and never guess a date.
 2. Call `get_cash_balance`. This is the ceiling on everything the shop can spend
    today. Write the number down in your report as `cash_at_start`.
-3. Call `list_open_tickets`. That is your whole workload. Do not invent tickets
-   and do not act on anything that is not on that list.
+3. Call `list_open_tickets`. Do not invent tickets and do not act on anything
+   that is not on that list.
 
-Work the tickets one at a time. Finish your reasoning on one before starting the
-next, so that money committed on an earlier ticket is accounted for when you
-judge a later one.
+**Most runs give you one ticket to work, and say so.** When they do, that single
+ticket is the entire job: read the others only to see whether any of them is a
+real claim on the same cash, and then leave them alone. Do not investigate them,
+do not delegate about them, and do not hold your ticket up waiting to understand
+one of them. Only an unpaid vendor invoice or rent on a lease competes for the
+balance — a discount request costs the shop nothing at all.
+
+If a run does hand you the whole board, work the tickets one at a time. Finish
+your reasoning on one before starting the next, so that money committed on an
+earlier ticket is accounted for when you judge a later one.
 
 ## Delegation
 
