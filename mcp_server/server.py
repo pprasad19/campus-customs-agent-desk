@@ -823,9 +823,25 @@ def reduce_inventory_for_sale(sku: str, size: str, qty: int, ticket_id: int) -> 
 def update_ticket_status(ticket_id: int, status: str, note: str, updated_by: str) -> dict[str, Any]:
     """Move a ticket to a new status and append a note explaining why.
 
-    Allowed statuses: open, waiting_on_approval, waiting_on_vendor, resolved,
-    refused. The note is appended to the ticket's existing notes rather than
-    overwriting them, so the ticket keeps its history.
+    Allowed statuses and what each one means:
+
+      open                 still being worked
+      waiting_on_approval  a decision is sitting with a human right now
+      waiting_on_vendor    an order has been placed and the shop is waiting
+      refused              the shop will not do this, for a stated reason
+      resolved             CLOSED FROM THE SHOP'S SIDE: everything the shop can
+                           do today has been done, and no further action is
+                           available to it
+
+    `resolved` does not promise that the customer has their goods. A shop can
+    finish its side of a job and still be waiting on the world — stock that has
+    not arrived, money it does not have. When that is the case the note must say
+    so plainly, because the note is where the truth lives. Closing a ticket with
+    a note that hides an unmet promise is the one thing this tool must never be
+    used for.
+
+    The note is appended to the ticket's existing notes rather than overwriting
+    them, so the ticket keeps its history.
     """
     allowed = {"open", "waiting_on_approval", "waiting_on_vendor", "resolved", "refused"}
     if status not in allowed:

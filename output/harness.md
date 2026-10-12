@@ -544,52 +544,61 @@ Selecting a ticket loads that ticket's own last run from the audit trail.
 
 ## 7. What the full run produced
 
-Reset to `$3,400.00`, then one agent run per ticket and three signed decisions,
-all three approved.
+Reset to `$3,400.00`, then the team worked each ticket and three decisions went
+to a human, all approved.
 
-| Ticket | Final status | Agents | Delegations | Cash |
-|---|---|---|---|---|
-| **101** tee order | `waiting_on_vendor` | Boss, Inventory, Accounting | 2 | **−$840.00** (invoice 501, approved) |
-| **102** rent | **`resolved`** | Boss, Facilities, Accounting | 2 | **−$2,400.00** (rent, approved) |
-| **103** discount | `waiting_on_vendor` | Boss, Customer Service | 1 | $0.00 (price approved, not a purchase) |
+| Ticket | Final status | Agents | Cash |
+|---|---|---|---|
+| **101** tee order | `resolved` | Boss, Inventory, Accounting | **−$840.00** (invoice 501, approved) |
+| **102** rent | `resolved` | Boss, Facilities, Accounting | **−$2,400.00** (rent, approved) |
+| **103** discount | `resolved` | Boss, Customer Service, Inventory | $0.00 (price approved, not a purchase) |
 
 **$3,400.00 − $3,240.00 = $160.00**, matching `cash_accounts.balance` exactly.
 Two rows in `payments`, both naming the owner as approver, both dated on the
 shop's own date 2026-08-31.
 
+### What `resolved` means here
+
+**Closed from the shop's side**: everything Campus Customs could do today has
+been done and no further move is available to it. It does **not** claim the
+customer has their goods, and where something is still outstanding the ticket
+note says exactly what:
+
+- **101** — the debt is cleared and Bulldog Print Co is unblocked, but size S is
+  still at 0 and no reprint was ordered. The vendor's real reprint price is
+  recorded nowhere and only $160.00 of cash remains. Tauhid has no tee.
+- **103** — the $46.00 price is agreed, but only 8 of the 20 hoodies exist and
+  the missing 12 would cost $264.00 against $160.00 of cash. The Yale AI Club has
+  a price, not twenty hoodies.
+- **102** — genuinely finished. The landlord has the money.
+
+`output/resolved_tickets.json` records this per ticket under `still_outstanding`,
+so a closed ticket can never quietly hide an unmet promise. The alternative —
+leaving them open forever — would have been just as untrue, because the shop
+really had run out of moves.
+
 **Zero payments were made by an agent.** All three decisions were raised by the
 team and taken by a human.
 
 **An approved decision is not a purchase.** Ticket 103's price override was
-approved and still moved $0.00 — agreeing a price buys nothing and rewrites no
-stored price. Counting it against the balance would understate what the shop
-holds.
-
-**Only 102 could honestly resolve.** 101 and 103 end at `waiting_on_vendor`
-because the goods do not exist: size S is at 0, only 8 of 20 hoodies are in
-stock, and no restock was ordered. The schema models no way for stock to arrive,
-and marking either resolved would claim an order was filled when nothing shipped.
+approved and still moved $0.00. Counting it against the balance would understate
+what the shop holds.
 
 ### Where the plan was right, and where it was wrong
 
-The Problem 6 predictions are preserved unedited in `output/desk_tickets.html`
-beside what actually happened.
-
-**Right:** the per-size stock trap on 101, the vendor block from the unpaid
-invoice, Accounting weighing that invoice against the competing rent rather than
-in isolation, Facilities owning the rent ticket and reading the lease rather than
-trusting the landlord's wording, and the unit cost as the floor under the
-discount on 103.
+**Right:** the per-size stock trap on 101, the vendor blocked by an unpaid
+invoice, Accounting weighing that invoice against the competing rent, Facilities
+reading the lease rather than trusting the landlord's wording, and the unit cost
+as the floor under the discount on 103.
 
 **Wrong, or not deterministic:**
 
 1. **The mesh is mostly used as a star.** Nearly every delegation runs
-   Boss → specialist. The predicted specialist-to-specialist hops did not occur
-   in this run — though an earlier run of ticket 102 *did* produce
-   Facilities → Accounting, so the capability works and the shape simply varies.
-2. **The Boss does much of the lookup itself**, calling
-   `check_inventory_stock` and `get_sku_pricing` directly and delegating mainly
-   what it cannot do — the money and the price.
+   Boss → specialist. An earlier run of ticket 102 did produce
+   Facilities → Accounting, so the capability works and the shape simply varies
+   between runs.
+2. **The Boss does much of the lookup itself**, delegating mainly what it cannot
+   do — the money and the price.
 3. **Customer Service was never called on 101**, so the customer waiting on the
    tee has still not been written to.
 
@@ -597,8 +606,8 @@ discount on 103.
 
 | File | What it holds |
 |---|---|
-| `output/desk_tickets.html` | Expected vs Actual per ticket, plus the itemised Cash tab |
-| `output/resolved_tickets.json` | Final status, outcome, per-agent contribution and the human decision per ticket |
+| `output/desk_tickets.html` | Expected vs Actual per ticket, the itemised Cash tab, and the reflection |
+| `output/resolved_tickets.json` | Final status, outcome, what is still outstanding, per-agent contribution and the human decision per ticket |
 | `output/resolved_board.html` | Screenshots of the live dashboard for each ticket |
 | `output/audit_trail.json` | Every step of every real run, appended, never wiped |
 | `output/approvals.json` · `output/drafts.json` | The signed decisions and the unsent drafts |

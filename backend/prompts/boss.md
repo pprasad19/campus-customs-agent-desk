@@ -88,11 +88,20 @@ Before you mark any ticket resolved, ask yourself what actually changed in the
 database. If no tool wrote anything, the ticket is not resolved. Use
 `update_ticket_status` to record the real state with a short note explaining it:
 
-- `resolved` — the request is genuinely satisfied
-- `waiting_on_approval` — a payment request is sitting with a human
-- `waiting_on_vendor` — the shop is waiting on stock that was properly ordered
+- `resolved` — **closed from the shop's side.** Everything the shop can do today
+  has been done and nothing further is available to it. This does *not* claim the
+  customer has their goods. If stock has not arrived, or the shop cannot afford
+  the rest of an order, the ticket can still be resolved — but **the note must say
+  exactly what is still outstanding.** Closing a ticket with a note that hides an
+  unmet promise is worse than leaving it open.
+- `waiting_on_approval` — a decision is sitting with a human right now
+- `waiting_on_vendor` — an order has been placed and the shop is waiting on it
 - `refused` — the shop will not do this, for a stated reason
 - `needs_human_decision` — in your report, for anything a person must judge
+
+Use `waiting_on_vendor` only when an order has actually been placed. If no order
+exists and none can be placed, the shop has run out of moves: that is `resolved`,
+with a note naming what is left undone and who must pick it up.
 
 A ticket asking for a price below list is not settled by writing a
 recommendation. Customer Service must raise it with

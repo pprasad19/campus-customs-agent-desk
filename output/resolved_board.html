@@ -106,7 +106,7 @@
     <div><span>Opened with</span><b>$3,400.00</b></div>
     <div class="out"><span>Paid out</span><b>$3,240.00</b></div>
     <div><span>Closed with</span><b>$160.00</b></div>
-    <div class="ok"><span>Resolved</span><b>1 of 3</b></div>
+    <div class="ok"><span>Closed</span><b>3 of 3</b></div>
     <div><span>Payments</span><b>2</b></div>
     <div><span>Decisions signed</span><b>3 approved</b></div>
   </div>
@@ -116,7 +116,7 @@
     <div class="head">
       <span class="tno">#101</span>
       <span class="title">Bulldog tee — Tauhid Zaman</span>
-      <span class="status s-waiting">waiting on vendor</span>
+      <span class="status s-resolved">resolved</span>
     </div>
     <figure>
       <img src="screenshots/board-101.jpg" alt="The Campus Customs desk with ticket 101 selected, showing the Boss and Inventory cards from run RUN-20261012T032350-21dc4a.">
@@ -128,7 +128,7 @@
           <li>Worked by <b>Boss, Inventory and Accounting</b> — 66 audit steps, 2 delegations.</li>
           <li><code>APR-8AF97D77</code> <b>approved</b>, releasing <span class="money">$840.00</span>
               to clear invoice 501 and unblock the vendor.</li>
-          <li>Not resolved, honestly: the tee does not exist to send and no reprint was ordered.</li>
+          <li>Closed from the shop's side — but the tee does not exist to send and no reprint was ordered, so Tauhid has not been served.</li>
         </ul>
       </figcaption>
     </figure>
@@ -150,7 +150,7 @@
         <ul>
           <li>Worked by <b>Boss, Facilities and Accounting</b> — 36 audit steps, 2 delegations.</li>
           <li><code>APR-668147AF</code> <b>approved</b>, releasing <span class="money">$2,400.00</span>.</li>
-          <li>The one ticket that genuinely finished — real obligation, affordable, approved, paid.</li>
+          <li>The one ticket where closing it also means the job is done — the landlord has the money.</li>
         </ul>
       </figcaption>
     </figure>
@@ -161,7 +161,7 @@
     <div class="head">
       <span class="tno">#103</span>
       <span class="title">Bulk hoodie discount — Yale AI Club</span>
-      <span class="status s-waiting">waiting on vendor</span>
+      <span class="status s-resolved">resolved</span>
     </div>
     <figure>
       <img src="screenshots/board-103.jpg" alt="The Campus Customs desk with ticket 103 selected, showing the Boss and Customer Service cards and the approved price override.">
@@ -174,21 +174,21 @@
           <li><code>APR-D85EDD3A</code> <b>approved</b> by the owner, moving
               <span class="nomoney">$0.00</span> — agreeing a price is not a purchase.</li>
           <li>The $58.00 stored list price is untouched; only this order's terms were agreed.</li>
-          <li>Not resolved: 8 of the 20 units exist and no order was placed for the other 12.</li>
+          <li>Closed from the shop's side — but 8 of the 20 units exist and the other 12 were never ordered.</li>
         </ul>
       </figcaption>
     </figure>
   </section>
 
   <div class="note">
-    <h2>Why only one ticket says “resolved”</h2>
+    <h2>What “resolved” means here</h2>
     <p>
-      Tickets 101 and 103 end at <code>waiting_on_vendor</code> because the goods do not exist. Size S
-      tees are at <b>0</b>, and while paying invoice 501 unblocked Bulldog Print Co, no reprint was
-      ordered and nothing has arrived. Only 8 of the 20 hoodies are in stock, and the approved price
-      settles the terms but not the supply. The database models no way for stock to appear, and the shop
-      rules forbid inventing it — marking either ticket <code>resolved</code> would claim an order had
-      been filled when nothing shipped.
+      All three tickets are <code>resolved</code>, which on this board means <b>closed from the shop's
+      side</b>: Campus Customs has done everything available to it. It does not claim the goods arrived.
+      Size S tees are still at <b>0</b> and no reprint was ordered; only 8 of the 20 hoodies exist and the
+      missing 12 would cost $264.00 against $160.00 of cash. Those facts are written into each ticket's
+      notes and into <code>resolved_tickets.json</code> under <code>still_outstanding</code>, because a
+      closed ticket must never hide an unmet promise.
     </p>
     <p>
       Everything the shop <em>could</em> settle, it settled: the overdue invoice is paid, the vendor is

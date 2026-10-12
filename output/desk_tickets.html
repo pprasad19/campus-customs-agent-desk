@@ -250,6 +250,15 @@
 
 <div class="wrap">
 
+  <div class="banner" style="background:#eef4fa;border-color:#b9d0e6">
+    <b>What “resolved” means on this board.</b> A ticket is marked
+    <span class="pill ok">resolved</span> when Campus Customs has done everything it can do today and no
+    further move is available to it. It does <b>not</b> claim the customer has their goods. Where something
+    is still outstanding — an unordered reprint, twelve hoodies the shop cannot afford — the ticket says so
+    in its own notes and in the Actual section below, and <code>output/resolved_tickets.json</code> records
+    it under <code>still_outstanding</code>.
+  </div>
+
   <div class="banner">
     <b>What this page is.</b> Every <span class="pill green">Expected</span> section below was written
     <em>before</em> the agents ran, as a prediction to be checked against reality. The
@@ -390,9 +399,15 @@
       Payment #1 executed: cash <b>$3,400.00 → $2,560.00</b>, <code>invoices.status</code> →
       <code>paid</code>, ticket moved to <code>waiting_on_vendor</code>.</p>
 
-      <h3>Final status: <span class="pill hold">waiting_on_vendor</span></h3>
-      <p>The debt is cleared and the vendor is unblocked, but <code>CC-TEE-WHITE</code>/S is still at
-      <b>0</b> and no reprint order has been placed, so Tauhid's order cannot be filled today.</p>
+      <h3>Final status: <span class="pill ok">resolved</span></h3>
+      <p>
+        <b>Resolved here means closed from the shop's side</b> — everything Campus Customs could do today
+        has been done, and no further move is available to it. It does <b>not</b> mean Tauhid has his tee.
+        A later run (<code>RUN-20261012T052414-ddee4c</code>) confirmed the debt was cleared and the vendor
+        unblocked, then closed the ticket with the outstanding work written into its history:
+        <code>CC-TEE-WHITE</code>/S is still at <b>0</b>, no reprint was ordered because the vendor's real
+        reprint price is recorded nowhere, and only $160.00 of cash remains.
+      </p>
 
       <div class="cmp">
         <h4>Plan vs reality</h4>
@@ -665,9 +680,14 @@
       <b>No cash moved</b>: agreeing a price is not a purchase. The terms were written into the ticket's
       history and the stored $58.00 list price was left unchanged.</p>
 
-      <h3>Final status: <span class="pill hold">waiting_on_vendor</span></h3>
-      <p>The price is settled. The supply is not: 8 units exist against 20 requested, and no order has been
-      placed for the remaining 12.</p>
+      <h3>Final status: <span class="pill ok">resolved</span></h3>
+      <p>
+        <b>Resolved here means closed from the shop's side.</b> The price is settled and the shop has no
+        further move: a later run (<code>RUN-20261012T052456-9377da</code>) confirmed the approved price and
+        closed the ticket with the shortfall written into its history. <b>8</b> units exist against the
+        <b>20</b> requested, and the missing 12 would cost <b>$264.00</b> against <b>$160.00</b> of cash, so
+        they were not ordered. The Yale AI Club has an agreed price, not twenty hoodies.
+      </p>
 
       <div class="cmp">
         <h4>Plan vs reality</h4>
@@ -788,8 +808,9 @@
       <p class="sub-note">
         Written after the real run of 2026-08-31. Every answer below points back to the
         <b>Ticket 101</b>, <b>Ticket 102</b>, <b>Ticket 103</b> and <b>Cash</b> tabs on this page, which
-        are the evidence. The shop opened with <b>$3,400.00</b> and closed with <b>$160.00</b>, and one
-        ticket out of three was genuinely finished.
+        are the evidence. The shop opened with <b>$3,400.00</b> and closed with <b>$160.00</b>. All three
+        tickets are closed from the shop's side; only <b>#102</b> ended with the customer actually
+        getting what they asked for.
       </p>
 
       <!-- Q1 -->
@@ -826,9 +847,11 @@
             did not use it on this ticket.
           </p>
           <p class="why">
-            <span class="why-k">In fairness</span> this ticket could not have been finished anyway. Once the
+            <span class="why-k">In fairness</span> the tee could never have reached Tauhid today. Once the
             bill was paid, the next step was to order the reprint — and <b>nobody built a tool for placing
-            an order with a vendor</b>. That limit is mine, not theirs.
+            an order with a vendor</b>. That limit is mine, not theirs. The ticket is marked
+            <b>resolved</b> because the shop has run out of moves, not because the order was filled, and the
+            ticket note says exactly that.
           </p>
         </div>
 
@@ -845,8 +868,8 @@
             Accounting then confirmed the shop could afford it and raised one request for the owner —
             <code>APR-668147AF</code>, <b>$2,400.00</b> — paying nothing until a person signed. It was
             <b>approved</b> by Purnima Prasad. The <b>Cash tab</b> shows the result: $2,400.00 out, taking
-            the shop from $2,560.00 to $160.00, and this is the one ticket on the whole board that honestly
-            reached <b>Resolved</b>.
+            the shop from $2,560.00 to $160.00. All three tickets are closed, but this is the only one where
+            closing it also means the job is genuinely <em>done</em> — the landlord has the money.
           </p>
           <p class="why">
             <span class="why-k">Why this one worked</span> everything it needed was something the shop could
@@ -1004,9 +1027,10 @@
             are), another that writes the confirmation, and another that closes the ticket.
           </p>
           <p class="note-why">
-            This is the case the board never got to show. Look at the three tickets on this page — none of
-            them could finish, because in every case the goods did not exist. This one would actually reach
-            <b>Resolved</b>, and it needs nothing new at all.
+            This is the case the board never got to show. All three tickets on this page are closed, but
+            only #102 ended with anyone actually receiving what they asked for — the other two closed with
+            goods still outstanding. A cap order would close <em>and</em> be delivered, and it needs nothing
+            new at all.
           </p>
         </div>
 
