@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Campus Customs — the board after the run</title>
+<style>
+  :root {
+    --bg: #0e1222; --panel: #1a2140; --panel-2: #212a4e;
+    --line: #2e3860; --text: #eef2fb; --soft: #aab4d4; --faint: #7b86ab;
+    --brass: #f0a93b; --mint: #3ddc9a; --violet: #a98bff; --rose: #ff6b81;
+    --serif: "Fraunces", Georgia, serif;
+    --sans: "Inter", -apple-system, "Segoe UI", sans-serif;
+    --mono: ui-monospace, "JetBrains Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 0 0 60px;
+    background:
+      radial-gradient(1100px 620px at 12% -8%, rgba(79,157,255,.16), transparent 62%),
+      radial-gradient(900px 540px at 92% 4%, rgba(169,139,255,.14), transparent 60%),
+      var(--bg);
+    color: var(--text); font-family: var(--sans); font-size: 15px; line-height: 1.6;
+  }
+  header.top {
+    padding: 26px 34px 22px;
+    background: linear-gradient(120deg, rgba(79,157,255,.14), transparent 46%), var(--panel);
+    border-bottom: 1px solid var(--line);
+  }
+  header.top::after {
+    content: ""; display: block; height: 2px; margin: 18px -34px -22px;
+    background: linear-gradient(90deg, transparent, var(--brass), var(--violet), #4f9dff, transparent);
+  }
+  h1 { margin: 0; font-family: var(--serif); font-size: 27px; font-weight: 600; }
+  .sub { margin: 4px 0 0; color: var(--soft); font-size: 13.5px; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+  .summary {
+    display: flex; flex-wrap: wrap; gap: 26px;
+    margin: 24px 0 8px; padding: 16px 22px;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+  }
+  .summary div span { display: block; font-size: 10.5px; letter-spacing: .7px;
+    text-transform: uppercase; color: var(--faint); }
+  .summary div b { font-family: var(--serif); font-size: 21px; font-variant-numeric: tabular-nums; }
+  .summary .ok b { color: var(--mint); }
+  .summary .out b { color: var(--brass); }
+
+  section.shot {
+    margin: 30px 0 0;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+    overflow: hidden;
+  }
+  section.shot > .head {
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    padding: 16px 22px; background: var(--panel-2); border-bottom: 1px solid var(--line);
+  }
+  .tno { font-family: var(--mono); font-size: 13px; color: var(--faint); }
+  .title { font-family: var(--serif); font-size: 20px; font-weight: 600; }
+  .status {
+    margin-left: auto;
+    font-size: 11px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase;
+    padding: 5px 12px; border-radius: 999px;
+  }
+  .s-resolved { background: rgba(61,220,154,.16); color: var(--mint); }
+  .s-waiting { background: rgba(169,139,255,.16); color: #c3aeff; }
+  .s-refused { background: rgba(255,107,129,.16); color: var(--rose); }
+
+  figure { margin: 0; }
+  figure img { display: block; width: 100%; height: auto; border-bottom: 1px solid var(--line); }
+  figcaption { padding: 16px 22px 20px; font-size: 13.5px; color: var(--soft); }
+  figcaption b { color: var(--text); }
+  figcaption .money { color: var(--brass); font-weight: 600; }
+  figcaption .nomoney { color: var(--faint); font-weight: 600; }
+  figcaption ul { margin: 10px 0 0; padding-left: 18px; }
+  figcaption li { margin-bottom: 4px; }
+  code {
+    font-family: var(--mono); font-size: 12.5px;
+    background: var(--panel-2); color: #ffd27a;
+    padding: 1px 6px; border-radius: 4px; border: 1px solid var(--line);
+  }
+  .note {
+    margin: 30px 0 0; padding: 16px 20px;
+    background: rgba(240,169,59,.08); border: 1px solid rgba(240,169,59,.3);
+    border-radius: 12px; font-size: 13.5px;
+  }
+  .note h2 { margin: 0 0 8px; font-family: var(--serif); font-size: 17px; color: #ffd27a; }
+  footer { margin-top: 34px; text-align: center; color: var(--faint); font-size: 12.5px; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <h1>Campus Customs — the board after the run</h1>
+    <p class="sub">
+      Screenshots of the live React desk, one per ticket, taken after all three tickets were worked
+      on the shop date 2026-08-31 and after all three human decisions had been approved.
+    </p>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="summary">
+    <div><span>Shop date</span><b>2026-08-31</b></div>
+    <div><span>Opened with</span><b>$3,400.00</b></div>
+    <div class="out"><span>Paid out</span><b>$3,240.00</b></div>
+    <div><span>Closed with</span><b>$160.00</b></div>
+    <div class="ok"><span>Resolved</span><b>1 of 3</b></div>
+    <div><span>Payments</span><b>2</b></div>
+    <div><span>Decisions signed</span><b>3 approved</b></div>
+  </div>
+
+  <!-- 101 -->
+  <section class="shot">
+    <div class="head">
+      <span class="tno">#101</span>
+      <span class="title">Bulldog tee — Tauhid Zaman</span>
+      <span class="status s-waiting">waiting on vendor</span>
+    </div>
+    <figure>
+      <img src="screenshots/board-101.jpg" alt="The Campus Customs desk with ticket 101 selected, showing the Boss and Inventory cards from run RUN-20261012T032350-21dc4a.">
+      <figcaption>
+        The desk with ticket 101 selected, showing its own run. The Boss reports size S stock at
+        <b>0</b> and Bulldog Print Co blocked by unpaid invoice 501; Inventory confirms no alternative
+        vendor supplies apparel — Elm City Gifts does mugs, QuickShip CT is a courier.
+        <ul>
+          <li>Worked by <b>Boss, Inventory and Accounting</b> — 66 audit steps, 2 delegations.</li>
+          <li><code>APR-8AF97D77</code> <b>approved</b>, releasing <span class="money">$840.00</span>
+              to clear invoice 501 and unblock the vendor.</li>
+          <li>Not resolved, honestly: the tee does not exist to send and no reprint was ordered.</li>
+        </ul>
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- 102 -->
+  <section class="shot">
+    <div class="head">
+      <span class="tno">#102</span>
+      <span class="title">Rent due — Elm City Properties</span>
+      <span class="status s-resolved">resolved</span>
+    </div>
+    <figure>
+      <img src="screenshots/board-102.jpg" alt="The Campus Customs desk with ticket 102 selected, stamped RESOLVED, showing the Boss, Accounting and Facilities cards.">
+      <figcaption>
+        Ticket 102 carries the green <b>RESOLVED</b> stamp. Facilities confirms the lease record
+        independently — <b>$2,400.00 due 2026-09-02</b>, two days after the shop date and not overdue —
+        and Accounting confirms it fits the $3,400.00 balance.
+        <ul>
+          <li>Worked by <b>Boss, Facilities and Accounting</b> — 36 audit steps, 2 delegations.</li>
+          <li><code>APR-668147AF</code> <b>approved</b>, releasing <span class="money">$2,400.00</span>.</li>
+          <li>The one ticket that genuinely finished — real obligation, affordable, approved, paid.</li>
+        </ul>
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- 103 -->
+  <section class="shot">
+    <div class="head">
+      <span class="tno">#103</span>
+      <span class="title">Bulk hoodie discount — Yale AI Club</span>
+      <span class="status s-waiting">waiting on vendor</span>
+    </div>
+    <figure>
+      <img src="screenshots/board-103.jpg" alt="The Campus Customs desk with ticket 103 selected, showing the Boss and Customer Service cards and the approved price override.">
+      <figcaption>
+        Customer Service proposed <b>$46.00 per hoodie</b> against a $22.00 cost and $58.00 list —
+        a 21% discount holding a $24.00 margin — and raised it as a signable decision rather than
+        promising anything.
+        <ul>
+          <li>Worked by <b>Boss and Customer Service</b> — 33 audit steps, 1 delegation.</li>
+          <li><code>APR-D85EDD3A</code> <b>approved</b> by the owner, moving
+              <span class="nomoney">$0.00</span> — agreeing a price is not a purchase.</li>
+          <li>The $58.00 stored list price is untouched; only this order's terms were agreed.</li>
+          <li>Not resolved: 8 of the 20 units exist and no order was placed for the other 12.</li>
+        </ul>
+      </figcaption>
+    </figure>
+  </section>
+
+  <div class="note">
+    <h2>Why only one ticket says “resolved”</h2>
+    <p>
+      Tickets 101 and 103 end at <code>waiting_on_vendor</code> because the goods do not exist. Size S
+      tees are at <b>0</b>, and while paying invoice 501 unblocked Bulldog Print Co, no reprint was
+      ordered and nothing has arrived. Only 8 of the 20 hoodies are in stock, and the approved price
+      settles the terms but not the supply. The database models no way for stock to appear, and the shop
+      rules forbid inventing it — marking either ticket <code>resolved</code> would claim an order had
+      been filled when nothing shipped.
+    </p>
+    <p>
+      Everything the shop <em>could</em> settle, it settled: the overdue invoice is paid, the vendor is
+      unblocked, the rent is discharged, and the discount is agreed. What remains is a supply
+      problem, and the board says so rather than rounding it up to success.
+    </p>
+  </div>
+
+  <footer>
+    Campus Customs · Homework 5 · screenshots of the live dashboard, cash reconciled against
+    <code>cash_accounts</code>
+  </footer>
+</div>
+
+</body>
+</html>

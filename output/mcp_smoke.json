@@ -1,0 +1,158 @@
+{
+  "what_this_is": "Evidence that each Campus Customs MCP tool was called over a live stdio connection and returned values matching data/campus_customs_new.db.",
+  "server_name": "campus-customs",
+  "connection_config": ".mcp.json",
+  "database_under_test": "data/campus_customs_new.db",
+  "tools_exposed": [
+    "check_inventory_stock",
+    "get_lease_rent_due",
+    "get_sku_pricing"
+  ],
+  "run_at_utc": "2026-10-11T01:22:14+00:00",
+  "note_on_dates": "run_at_utc is the real wall-clock time of this test run. All shop date math inside the tools uses desk.date_today (2026-08-31), never the system clock.",
+  "all_tools_verified": true,
+  "results": [
+    {
+      "ticket": 101,
+      "prompt_to_vibe_coder": "Ticket 101 asks for one white Bulldog tee in size S. Using the Campus Customs MCP server, check how many units of CC-TEE-WHITE in size S are on hand.",
+      "tool_name": "check_inventory_stock",
+      "arguments": {
+        "sku": "CC-TEE-WHITE",
+        "size": "S"
+      },
+      "tool_output": {
+        "found": true,
+        "sku": "CC-TEE-WHITE",
+        "name": "Classic Bulldog Tee",
+        "size": "S",
+        "qty": 0,
+        "location": "Aisle B"
+      },
+      "database_verification": {
+        "source_file": "data/campus_customs_new.db",
+        "all_fields_match": true,
+        "field_checks": [
+          {
+            "field": "inventory.name",
+            "from_database": "Classic Bulldog Tee",
+            "from_tool": "Classic Bulldog Tee",
+            "match": true
+          },
+          {
+            "field": "inventory.qty",
+            "from_database": 0,
+            "from_tool": 0,
+            "match": true
+          },
+          {
+            "field": "inventory.location",
+            "from_database": "Aisle B",
+            "from_tool": "Aisle B",
+            "match": true
+          }
+        ]
+      }
+    },
+    {
+      "ticket": 102,
+      "prompt_to_vibe_coder": "Ticket 102 is a rent notice from Elm City Properties and carries lease_id 1. Using the Campus Customs MCP server, look up the rent owed on lease 1 and when it is due.",
+      "tool_name": "get_lease_rent_due",
+      "arguments": {
+        "lease_id": 1
+      },
+      "tool_output": {
+        "found": true,
+        "lease_id": 1,
+        "space_name": "Chapel Street shop",
+        "landlord": "Elm City Properties",
+        "monthly_rent": 2400.0,
+        "next_due": "2026-09-02",
+        "today": "2026-08-31",
+        "days_until_due": 2,
+        "is_overdue": false,
+        "notes": null
+      },
+      "database_verification": {
+        "source_file": "data/campus_customs_new.db",
+        "all_fields_match": true,
+        "field_checks": [
+          {
+            "field": "leases.space_name",
+            "from_database": "Chapel Street shop",
+            "from_tool": "Chapel Street shop",
+            "match": true
+          },
+          {
+            "field": "leases.landlord",
+            "from_database": "Elm City Properties",
+            "from_tool": "Elm City Properties",
+            "match": true
+          },
+          {
+            "field": "leases.monthly_rent",
+            "from_database": 2400.0,
+            "from_tool": 2400.0,
+            "match": true
+          },
+          {
+            "field": "leases.next_due",
+            "from_database": "2026-09-02",
+            "from_tool": "2026-09-02",
+            "match": true
+          },
+          {
+            "field": "desk.date_today",
+            "from_database": "2026-08-31",
+            "from_tool": "2026-08-31",
+            "match": true
+          },
+          {
+            "field": "days_until_due (derived)",
+            "from_database": 2,
+            "from_tool": 2,
+            "match": true
+          }
+        ]
+      }
+    },
+    {
+      "ticket": 103,
+      "prompt_to_vibe_coder": "Ticket 103 asks for a bulk discount on 20 navy hoodies in size M. Using the Campus Customs MCP server, look up the cost and list price for CC-HOOD-NAVY.",
+      "tool_name": "get_sku_pricing",
+      "arguments": {
+        "sku": "CC-HOOD-NAVY"
+      },
+      "tool_output": {
+        "found": true,
+        "sku": "CC-HOOD-NAVY",
+        "unit_cost": 22.0,
+        "list_price": 58.0,
+        "margin_per_unit": 36.0
+      },
+      "database_verification": {
+        "source_file": "data/campus_customs_new.db",
+        "all_fields_match": true,
+        "field_checks": [
+          {
+            "field": "pricing.unit_cost",
+            "from_database": 22.0,
+            "from_tool": 22.0,
+            "match": true
+          },
+          {
+            "field": "pricing.list_price",
+            "from_database": 58.0,
+            "from_tool": 58.0,
+            "match": true
+          },
+          {
+            "field": "margin_per_unit (derived)",
+            "from_database": 36.0,
+            "from_tool": 36.0,
+            "match": true
+          }
+        ]
+      }
+    }
+  ]
+}

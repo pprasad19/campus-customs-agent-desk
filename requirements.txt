@@ -1,0 +1,31 @@
+# Homework 5 dependencies. Install into the local virtual environment:
+#
+#     python -m venv .venv
+#     .venv\Scripts\python.exe -m pip install -r requirements.txt     (Windows)
+#     .venv/bin/python -m pip install -r requirements.txt             (macOS/Linux)
+#
+# Needs PORTKEY_API_KEY. Copy .env.example to .env in this folder and add the
+# key; a .env in the folder above is used as a fallback. Every agent runs
+# gpt-6-luna through Portkey.
+
+# The MCP server. `from fastmcp import FastMCP` comes from here.
+#
+# Note on which FastMCP this is: the official `mcp` SDK used to ship FastMCP at
+# mcp.server.fastmcp, but renamed it to MCPServer in mcp 2.x, and pydantic-ai
+# 2.x requires mcp 2.x. The standalone fastmcp package is the maintained home of
+# the FastMCP API, so the server imports it from there. The [server] extra is
+# required; fastmcp-slim alone is client-side only.
+fastmcp-slim[server]==4.1.0
+
+# The agent framework. The openai extra supplies the OpenAI-compatible client
+# used to reach gpt-6-luna through Portkey; the mcp extra supplies MCPToolset
+# and load_mcp_toolsets, which connect the agents to the MCP server.
+pydantic-ai-slim[openai,mcp]==2.55.0
+
+# Reads the .env.
+python-dotenv==1.2.4
+
+# The dashboard backend. Started from backend/ with:
+#     uvicorn main:app --reload --port 8000
+fastapi==0.143.0
+uvicorn[standard]==0.54.0

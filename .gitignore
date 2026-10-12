@@ -1,0 +1,22 @@
+# The real key never goes near the repository. Copy .env.example to .env and
+# fill it in locally; .env.example is committed, .env is not.
+.env
+
+# Python virtual environment and bytecode
+.venv/
+__pycache__/
+*.py[cod]
+
+# Node dependencies and build output
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Editor and OS noise
+.DS_Store
+Thumbs.db
+*.swp
+
+# NOTE: data/*.db is deliberately NOT ignored.
+# Both the original database and the working copy are committed on purpose so
+# the app can be cloned and run without any setup step.
