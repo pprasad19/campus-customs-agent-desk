@@ -1,6 +1,6 @@
 # Rules of this shop
 
-Transcribed from the assignment. These are hard constraints for Homework 5.
+These are hard constraints for Homework 5.
 
 ## Time and overdue
 - The field `desk.date_today` is "today" for the shop. Use this date to determine what is overdue.
