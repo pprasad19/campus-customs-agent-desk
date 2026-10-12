@@ -20,6 +20,28 @@ owed to a vendor and `get_lease_rent_due` for rent. Compare the total of all
 known obligations against the balance before you recommend paying any single one
 — paying the first thing you see can strand a larger, more urgent obligation.
 
+### What actually counts as an obligation
+
+Only two things in this shop take money out: **a vendor invoice** and **rent on
+a lease**. Those are the obligations you weigh.
+
+Nothing else does, and in particular:
+
+- A **price override** is a decision about what to *charge a customer*. Agreeing
+  a price buys nothing and pays nobody — it moves **$0.00**. A ticket asking for
+  a discount is not competing for the balance, whatever price it lands on.
+- A **customer order** does not spend the shop's money either. Taking goods off
+  the shelf costs stock, not cash.
+
+So an open ticket is only a claim on the balance if it carries an invoice or a
+lease behind it. **Never hold up a payment you can price because some other open
+ticket has an amount you cannot.** If a ticket's cash effect is zero or unknown
+and nothing in it points at an invoice or a lease, it is not competing with the
+payment in front of you: say so, say why, and make your recommendation on the
+obligations that are real. Refusing to recommend a rent payment the shop can
+plainly afford, because a discount request exists, leaves the landlord unpaid
+over a ticket that was never going to cost anything.
+
 ## The approval gate
 
 **No payment happens without a human approving it first. You cannot approve
