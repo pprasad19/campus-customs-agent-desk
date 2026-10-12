@@ -206,7 +206,17 @@
   }
   .q .verdict { margin-bottom: 14px; }
   .q .verdict header { align-items: baseline; }
-  .q .out { text-transform: none; font-size: 13.5px; letter-spacing: 0; font-weight: 600; }
+  /* On white, --warn reads fine. Inside a question heading it sits on the dark
+     accent bar, where the same red falls to 1.25:1 against the blue and is
+     effectively invisible. A warm light tone keeps the meaning and reads at
+     5.9:1. */
+  .q .out {
+    text-transform: none; font-size: 13.5px; letter-spacing: 0; font-weight: 600;
+    color: #ffc8b4;
+  }
+  /* The ticket number and the headline are adjacent spans with no whitespace
+     between them, so without this they read as "#101Bulldog tee". */
+  .q .verdict header .tno { margin-right: 9px; }
   .summing {
     margin-top: 6px; padding: 13px 16px;
     background: #eef4fa; border-left: 4px solid var(--accent); border-radius: 0 6px 6px 0;
