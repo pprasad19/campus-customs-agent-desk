@@ -55,6 +55,22 @@ def _balance() -> float:
         conn.close()
 
 
+def _is_payment(record: dict) -> bool:
+    """A payment moves cash. A price override only agrees what to charge."""
+    return record.get("category", "payment") == "payment"
+
+
+def _one_line(record: dict) -> str:
+    """One readable line for either shape of request."""
+    if _is_payment(record):
+        return (f"{record['kind']} #{record['ref_id']}  "
+                f"${record['amount']:,.2f}  from {record['account']}")
+    return (f"{record['kind']} ticket #{record.get('ticket_id', record.get('ref_id'))}  "
+            f"{record.get('qty')} x {record.get('sku')} {record.get('size')} at "
+            f"${record.get('proposed_unit_price', 0):,.2f}/unit  "
+            f"(list ${record.get('list_price', 0):,.2f}, cost ${record.get('unit_cost', 0):,.2f})")
+
+
 def show() -> None:
     records = _load()
     if not records:
@@ -64,15 +80,16 @@ def show() -> None:
     print(f"checking balance: ${balance:,.2f}   shop date: {_shop_date()}\n")
     for r in records:
         mark = {"pending": "[ ]", "approved": "[x]", "rejected": "[-]"}.get(r["status"], "[?]")
-        print(f"{mark} {r['approval_id']}  {r['status']:9} {r['kind']} #{r['ref_id']}  "
-              f"${r['amount']:,.2f}  from {r['account']}")
+        print(f"{mark} {r['approval_id']}  {r['status']:9} {_one_line(r)}")
         print(f"      asked by : {r['requested_by']} on shop date {r['requested_on_shop_date']}")
         print(f"      reason   : {r['reason']}")
-        if r["status"] == "pending":
+        if r["status"] == "pending" and _is_payment(r):
             after = balance - r["amount"]
             verdict = f"would leave ${after:,.2f}" if after >= 0 else \
                       f"WOULD OVERDRAW by ${abs(after):,.2f} — the pay tool will refuse this"
             print(f"      if paid  : {verdict}")
+        elif r["status"] == "pending":
+            print(f"      if agreed: moves no cash — agreeing a price is not a purchase")
         if r.get("approved_by"):
             print(f"      decided  : {r['status']} by {r['approved_by']} on {r['decided_on']}")
         if r.get("consumed_by_payment_id"):
@@ -94,11 +111,15 @@ def decide(approval_id: str, status: str, by: str, note: str | None) -> int:
         r["decision_note"] = note
         _save(records)
         print(f"{approval_id} -> {status} by {by}")
-        if status == "approved":
+        if status == "approved" and _is_payment(r):
             after = _balance() - r["amount"]
             print(f"  ${r['amount']:,.2f} cleared to pay; would leave ${after:,.2f}")
             if after < 0:
                 print("  note: this still cannot be paid — the pay tool refuses overdrafts.")
+        elif status == "approved":
+            print(f"  ${r.get('proposed_unit_price', 0):,.2f}/unit agreed. No cash moves.")
+        print("  recorded on the board only. The dashboard is what writes the decision "
+              "into the ticket and runs the payment.")
         return 0
     print(f"No approval request with id {approval_id}.")
     return 1
@@ -114,8 +135,8 @@ def main() -> int:
     args = parser.parse_args()
 
     if args.approve or args.reject:
-        if not args.by:
-            print("--by is required: a payment approval must name the person who gave it.")
+        if not args.by.strip():
+            print("--by is required: a decision must name the person who made it.")
             return 1
         if args.approve:
             return decide(args.approve, "approved", args.by, args.note)
