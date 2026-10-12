@@ -205,18 +205,25 @@
     font-size: 14px; font-weight: 700; text-align: center; line-height: 27px;
   }
   .q .verdict { margin-bottom: 14px; }
-  .q .verdict header { align-items: baseline; }
-  /* On white, --warn reads fine. Inside a question heading it sits on the dark
-     accent bar, where the same red falls to 1.25:1 against the blue and is
-     effectively invisible. A warm light tone keeps the meaning and reads at
-     5.9:1. */
+  /* A bare `header` rule further up gives every <header> on the page the dark
+     blue banner background. These three verdict headers picked it up, so the
+     red headline was sitting at 1.25:1 on dark blue and was unreadable.
+     Overriding the background rather than the text colour means the ordinary
+     --warn red reads at 7.4:1, and nothing depends on a more specific colour
+     rule winning in whichever viewer opens the file. */
+  .verdict header {
+    display: block;
+    background: #fdeeeb;
+    color: #15202b;
+    padding: 9px 14px;
+    border-left: 4px solid var(--warn);
+    border-radius: 0 6px 6px 0;
+  }
+  .verdict header .tno { color: #6b4a42; margin-right: 4px; }
   .q .out {
     text-transform: none; font-size: 13.5px; letter-spacing: 0; font-weight: 600;
-    color: #ffc8b4;
+    color: var(--warn);
   }
-  /* The ticket number and the headline are adjacent spans with no whitespace
-     between them, so without this they read as "#101Bulldog tee". */
-  .q .verdict header .tno { margin-right: 9px; }
   .summing {
     margin-top: 6px; padding: 13px 16px;
     background: #eef4fa; border-left: 4px solid var(--accent); border-radius: 0 6px 6px 0;
@@ -834,7 +841,7 @@
         <h3><span class="qn">1</span> How would you evaluate the performance of the agents on each ticket, and why?</h3>
 
         <div class="verdict v-resolved">
-          <header><span class="tno" style="color:#dce9f6;margin-right:10px">#101</span><span class="out" style="color:#ffc8b4">Bulldog tee — found the real problem, then forgot the customer</span></header>
+          <header><span class="tno">#101</span> <span class="out">Bulldog tee — found the real problem, then forgot the customer</span></header>
           <p class="did">
             Tauhid asked for one white tee in size S. The shop has <b>ten</b> white tees — but none of them
             are size S. The <b>Ticket 101 tab</b> shows Inventory checking the exact size and finding
@@ -872,7 +879,7 @@
         </div>
 
         <div class="verdict v-resolved">
-          <header><span class="tno" style="color:#dce9f6;margin-right:10px">#102</span><span class="out" style="color:#ffc8b4">Rent — the best work of the three</span></header>
+          <header><span class="tno">#102</span> <span class="out">Rent — the best work of the three</span></header>
           <p class="did">
             The landlord's email said "rent due in 2 days". The <b>Ticket 102 tab</b> shows Facilities
             refusing to take that at face value: it opened the actual lease and confirmed the real figure
@@ -894,7 +901,7 @@
         </div>
 
         <div class="verdict v-resolved">
-          <header><span class="tno" style="color:#dce9f6;margin-right:10px">#103</span><span class="out" style="color:#ffc8b4">Discount — good business sense, poor customer care</span></header>
+          <header><span class="tno">#103</span> <span class="out">Discount — good business sense, poor customer care</span></header>
           <p class="did">
             The Yale AI Club asked for 20 navy hoodies at a discount. The <b>Ticket 103 tab</b> shows
             Customer Service looking up what the shop <em>paid</em> for a hoodie (<b>$22.00</b>) before
