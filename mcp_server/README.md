@@ -105,6 +105,8 @@ They hold process state rather than shop facts, and the given schema has no
 table for either. Putting them in the database would mean inventing shop
 structure that was not provided.
 
+**Both approval tools refuse a second ask.** If a request for the same obligation is already pending, the existing `approval_id` is handed back rather than a duplicate slip being put in front of the owner. If one was already **declined**, the tool refuses outright: a refusal is an answer, and re-raising it would put a bill the owner turned down back one signature away from being paid.
+
 ## Running it
 
 The agents start this server themselves — `.mcp.json` at the project root is the

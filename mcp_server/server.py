@@ -441,6 +441,28 @@ def request_payment_approval(
     # payment twice — with nothing to stop them approving both. An invoice is
     # saved by its status flipping to `paid`, but a lease has no such field, so
     # a duplicate rent approval really would pay the landlord twice.
+    # A refusal is an answer, not a gap. Asking again for a bill the owner has
+    # already turned down would put it back in front of them as though it were
+    # a fresh decision, and one signature would pay it.
+    for existing in _load_board(APPROVALS_PATH):
+        if (
+            existing.get("status") == "rejected"
+            and existing.get("kind") == kind
+            and existing.get("ref_id") == ref_id
+        ):
+            return {
+                "ok": False,
+                "refused": True,
+                "approval_id": existing.get("approval_id"),
+                "reason": (
+                    f"{kind} #{ref_id} was already declined by "
+                    f"{existing.get('rejected_by') or 'the owner'} "
+                    f"(approval {existing.get('approval_id')}). The shop does not ask a second "
+                    "time for something a person has refused. Record the refusal on the ticket "
+                    "and move on."
+                ),
+            }
+
     for existing in _load_board(APPROVALS_PATH):
         if (
             existing.get("status") == "pending"
@@ -548,6 +570,25 @@ def request_price_override_approval(
     # because two agents both thought it was their job — would put two identical
     # slips in front of the owner and invite them to approve the same discount
     # twice. Hand back the request already waiting instead of making another.
+    # Same rule as payments: a price the owner has refused is settled, not open.
+    for existing in _load_board(APPROVALS_PATH):
+        if (
+            existing.get("status") == "rejected"
+            and existing.get("kind") == "price_override"
+            and existing.get("ticket_id") == ticket_id
+        ):
+            return {
+                "ok": False,
+                "refused": True,
+                "approval_id": existing.get("approval_id"),
+                "reason": (
+                    f"A price override for ticket {ticket_id} was already declined by "
+                    f"{existing.get('rejected_by') or 'the owner'} "
+                    f"(approval {existing.get('approval_id')}). The list price stands. Do not "
+                    "propose another price for this ticket; record the refusal and move on."
+                ),
+            }
+
     for existing in _load_board(APPROVALS_PATH):
         if (
             existing.get("status") == "pending"

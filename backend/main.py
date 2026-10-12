@@ -411,6 +411,15 @@ async def reject_payment(approval_id: str, body: RejectRequest) -> dict[str, Any
     """Turn a prepared payment down. No cash moves."""
     import json
 
+    # Turning a payment down is as much a human decision as approving one, and
+    # the ticket note names whoever made it. Without this an unsigned decline
+    # would be written into the ticket's permanent history as "DECLINED by ".
+    if not body.rejected_by.strip():
+        raise HTTPException(
+            status_code=400,
+            detail="rejected_by is required; a decision must name a person.",
+        )
+
     records = _load_approvals()
     record = next((r for r in records if r.get("approval_id") == approval_id), None)
     if record is None:
@@ -654,6 +663,20 @@ async def reset_database(clear_boards: bool = Query(default=True)) -> dict[str, 
     """
     if not ORIGINAL_DB.exists():
         raise HTTPException(status_code=500, detail=f"Original database missing at {ORIGINAL_DB}.")
+
+    # A reset replaces the database file and drops the MCP connection. Doing
+    # that while the team is working pulls the shop out from under it: the run
+    # would go on reasoning about balances and tickets that no longer exist, and
+    # could write its conclusions into a database that had just been rolled
+    # back. Runs take this same lock, so waiting for one is the whole fix.
+    if run_lock.locked():
+        raise HTTPException(
+            status_code=409,
+            detail=(
+                "A run is in progress. Resetting now would swap the database out from "
+                "under the agents. Wait for the run to finish, then reset."
+            ),
+        )
 
     # Drop the MCP connection first: the server holds the database open.
     await link.close()

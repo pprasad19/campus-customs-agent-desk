@@ -360,7 +360,7 @@ between the database and everything else.
 | `POST /approvals/{approval_id}/approve` | **The only thing that moves cash.** Records the human approval with the approver's name, then calls `pay_invoice` or `pay_rent` through MCP. Requires `approved_by`; the pay tool re-checks the approval and the balance and can still refuse. For a `decision` approval it settles the ticket with the agreed terms instead, and no cash moves. |
 | `POST /approvals/{approval_id}/reject` | Turns a prepared payment down. No cash moves. |
 | `GET /cash` | Returns the current `checking` balance from `cash_accounts`, with payments made so far, the pending approvals queued against that balance, and what would be left if all of them were paid. |
-| `POST /reset` | Restores `campus_customs_new.db` from the pristine original for a fresh run, and clears the approval and draft boards. **The audit trail is deliberately kept.** |
+| `POST /reset` | Restores `campus_customs_new.db` from the pristine original for a fresh run, and clears the approval and draft boards. **The audit trail is deliberately kept.** Refuses with `409` while a run is in progress — a reset replaces the database file and drops the MCP connection, which would pull the shop out from under a working team. |
 | `GET /` | Lists the routes above, the model in use, and which database file is live. |
 
 ### Two design decisions worth stating
@@ -484,9 +484,9 @@ through the MCP server.
 | `POST /tickets/{id}/run` | Runs the five-agent team on one ticket; returns the `ShiftReport` |
 | `GET /events` | Recent agent-loop steps for the board; `?limit=` and `?run_id=` |
 | `POST /approvals/{id}/approve` | **The only thing that moves cash.** Records the approver, then pays through MCP — or, for a decision, settles the ticket with the agreed terms and moves nothing |
-| `POST /approvals/{id}/reject` | Turns a request down and records the refusal on the ticket |
+| `POST /approvals/{id}/reject` | Turns a request down and records the refusal on the ticket; requires a name, exactly as approving does |
 | `GET /cash` | Checking balance, payments made, and the approvals queued against it |
-| `POST /reset` | Restores the working DB from the original; clears the boards; **keeps the audit trail** |
+| `POST /reset` | Restores the working DB from the original; clears the boards; **keeps the audit trail**; refuses during a run |
 | `GET /` | Lists the routes, the model and the live database |
 
 ---

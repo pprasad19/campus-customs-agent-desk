@@ -128,9 +128,9 @@ Check it is alive by opening <http://localhost:8000/> which lists every route.
 | `POST /tickets/{id}/run` | Runs the five-agent team on one ticket. Refuses a ticket that is already `resolved` or `refused` |
 | `GET /events` | Recent agent steps, so the board can show live progress |
 | `POST /approvals/{id}/approve` | **The only thing that moves cash** |
-| `POST /approvals/{id}/reject` | Turns a prepared payment or price down |
+| `POST /approvals/{id}/reject` | Turns a prepared payment or price down. Needs a name, same as approving |
 | `GET /cash` | The checking balance and anything waiting on a signature |
-| `POST /reset` | Restores the database to original values |
+| `POST /reset` | Restores the database to original values. Refuses while a run is in progress |
 
 ---
 
