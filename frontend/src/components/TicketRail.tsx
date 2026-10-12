@@ -35,6 +35,13 @@ export function TicketRail({
 }: Props) {
   const openCount = tickets.filter((t) => t.is_open).length;
 
+  // A closed ticket is not worked again: `resolved` means the shop ran out of
+  // moves, `refused` means the owner said no. Ringing the bell on one would let
+  // the team raise a fresh approval for a bill that was already declined, so
+  // the bell is put out of reach and says why.
+  const chosen = tickets.find((t) => t.id === selected) ?? null;
+  const closed = chosen ? chosen.status === "resolved" || chosen.status === "refused" : false;
+
   return (
     <aside className="rail">
       <div className="rail-head">
@@ -106,10 +113,31 @@ export function TicketRail({
         {!tickets.length && <div className="empty">No tickets on the spike.</div>}
       </div>
 
-      <button className="bell" onClick={onRun} disabled={running || selected === null}>
+      <button
+        className="bell"
+        onClick={onRun}
+        disabled={running || selected === null || closed}
+        title={
+          closed
+            ? `Ticket #${selected} is ${STATUS_LABEL[chosen!.status]?.toLowerCase()} and is not worked again. Reset the shop to start over.`
+            : undefined
+        }
+      >
         {running ? (
           <>
             <span className="spinner" aria-hidden /> team working…
+          </>
+        ) : closed ? (
+          <>
+            <BellIcon size={22} />
+            <span className="bell-stack">
+              Ticket #{selected} is closed
+              <span className="bell-sub">
+                {chosen!.status === "refused"
+                  ? "you declined this one — reset the shop to start over"
+                  : "the shop is finished with it — reset the shop to start over"}
+              </span>
+            </span>
           </>
         ) : (
           <>

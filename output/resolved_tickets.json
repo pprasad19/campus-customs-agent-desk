@@ -1,5 +1,5 @@
 {
-  "run_date_real_utc": "2026-10-12T05:26:58+00:00",
+  "run_date_real_utc": "2026-10-12T20:34:37+00:00",
   "shop_date": "2026-08-31",
   "database": "data/campus_customs_new.db",
   "what_resolved_means": "Closed from the shop's side: everything the shop could do today has been done and no further action is available to it. It does not claim the customer has their goods. Where something is still outstanding it is named in `still_outstanding` and in the ticket's own notes.",
@@ -32,47 +32,51 @@
       "requester": "Tauhid Zaman",
       "subject": "Bulldog tee",
       "final_status": "resolved",
-      "outcome": "Closed from the shop's side. Invoice 501 was approved and paid, so Bulldog Print Co can ship again. Size S is still at zero and no reprint was ordered, because the vendor's actual reprint price is recorded nowhere and only $160.00 of cash remains. The customer has not received a tee.",
-      "still_outstanding": "A reprint of CC-TEE-WHITE size S has not been ordered, so the tee has not reached the customer.",
+      "outcome": "Closed from the shop's side. Invoice 501 was approved and paid in full, so Bulldog Print Co is no longer blocked from shipping. CC-TEE-WHITE size S is still at zero and no reprint was ordered, because the shop has no tool for placing a vendor order and only $160.00 of cash remains. Tauhid has not received a tee.",
+      "still_outstanding": "A reprint of CC-TEE-WHITE size S was never ordered, so the tee has not reached the customer.",
       "cash_effect": {
         "amount": 840.0,
         "direction": "out",
         "what": "Payment #1 - invoice 501 to Bulldog Print Co, approved and paid in full",
-        "approval": "APR-8AF97D77"
+        "approval": "APR-9B40C55B"
       },
       "agent_contributions": {
-        "boss": "Re-read ticket 101 after the invoice was paid, confirmed with Inventory that the vendor was unblocked, and closed the ticket from the shop's side with the outstanding work written into its history.",
-        "inventory": "Confirmed CC-TEE-WHITE size S still at qty 0, and that Bulldog Print Co is now unblocked with a five-day lead but that no restock order exists.",
-        "accounting": "Earlier in the run, weighed invoice 501 ($840.00, overdue) against the rent competing for the same balance and raised payment approval APR-8AF97D77. Made no payment."
+        "boss": "Read the ticket and the balance, asked Inventory why the tee could not be sent, then asked Accounting whether the blocking invoice could be afforded. Closed the ticket only after the owner's payment went through, writing the unfinished work into its notes.",
+        "inventory": "Found CC-TEE-WHITE size S at 0 units against the 1 requested, and traced the cause: Bulldog Print Co is blocked from shipping until overdue invoice 501 is settled. Checked the vendor's status and lead time rather than assuming.",
+        "accounting": "Weighed invoice 501 ($840.00, 3 days overdue) against the $2,400.00 rent competing for the same balance, confirmed $3,400.00 covered both with $160.00 to spare, and raised payment approval APR-9B40C55B. Paid nothing itself."
       },
       "agents_that_worked": [
+        "accounting",
         "boss",
         "inventory"
       ],
       "delegations": [
-        "boss -> inventory"
+        "boss -> inventory",
+        "boss -> accounting"
       ],
       "mcp_tools_used": [
         "check_inventory_stock",
         "get_cash_balance",
         "get_invoice",
+        "get_lease_rent_due",
         "get_shop_date",
-        "get_sku_pricing",
         "get_ticket",
         "get_vendor_status",
+        "list_open_tickets",
         "list_vendors",
+        "request_payment_approval",
         "update_ticket_status"
       ],
-      "agent_run": "RUN-20261012T052414-ddee4c",
-      "audit_steps_in_run": 43,
+      "agent_run": "RUN-20261012T202807-da743c",
+      "audit_steps_in_run": 54,
       "human_approvals": [
         {
-          "approval_id": "APR-8AF97D77",
+          "approval_id": "APR-9B40C55B",
           "category": "payment",
           "kind": "invoice",
           "status": "approved",
           "decided_by": "Purnima Prasad",
-          "decided_on_utc": "2026-10-12T03:25:41+00:00",
+          "decided_on_utc": "2026-10-12T20:28:38+00:00",
           "amount": 840.0,
           "proposed_unit_price": null,
           "moved_cash": true
@@ -85,18 +89,18 @@
       "requester": "Elm City Properties",
       "subject": "Rent due",
       "final_status": "resolved",
-      "outcome": "Closed. Rent of $2,400.00 was verified against the lease, approved by the owner and paid in full. Nothing further is owed on this notice.",
+      "outcome": "Closed. Rent of $2,400.00 was verified against lease 1, approved by the owner and paid in full on the shop's date. Nothing further is owed on this notice.",
       "still_outstanding": null,
       "cash_effect": {
         "amount": 2400.0,
         "direction": "out",
         "what": "Payment #2 - one month of rent on lease 1 to Elm City Properties, approved and paid in full",
-        "approval": "APR-668147AF"
+        "approval": "APR-09122CCE"
       },
       "agent_contributions": {
-        "boss": "Asked Facilities to establish the obligation and Accounting to judge affordability, then recorded the ticket as waiting on a signature.",
-        "facilities": "Read the lease record rather than trusting the landlord's email: $2,400.00 due 2026-09-02, two days after the shop date and not yet overdue.",
-        "accounting": "Confirmed the rent was affordable alongside the other open obligations and raised payment approval APR-668147AF. Made no payment."
+        "boss": "Treated the landlord's 'due in 2 days' as a claim to check, not a fact. Asked Facilities to establish what the lease actually says, then Accounting whether it was affordable alongside the invoice.",
+        "facilities": "Read the lease record instead of the email: $2,400.00 on lease 1, due 2026-09-02 against a shop date of 2026-08-31 - two days out and not yet overdue, so the landlord's wording was accurate.",
+        "accounting": "Confirmed the rent still fitted once the $840.00 invoice was counted, leaving $160.00, and raised payment approval APR-09122CCE. Paid nothing itself."
       },
       "agents_that_worked": [
         "accounting",
@@ -116,16 +120,16 @@
         "request_payment_approval",
         "update_ticket_status"
       ],
-      "agent_run": "RUN-20261012T032546-61677a",
-      "audit_steps_in_run": 36,
+      "agent_run": "RUN-20261012T202843-350553",
+      "audit_steps_in_run": 34,
       "human_approvals": [
         {
-          "approval_id": "APR-668147AF",
+          "approval_id": "APR-09122CCE",
           "category": "payment",
           "kind": "rent",
           "status": "approved",
           "decided_by": "Purnima Prasad",
-          "decided_on_utc": "2026-10-12T03:26:14+00:00",
+          "decided_on_utc": "2026-10-12T20:29:33+00:00",
           "amount": 2400.0,
           "proposed_unit_price": null,
           "moved_cash": true
@@ -138,25 +142,24 @@
       "requester": "Yale AI Club",
       "subject": "Bulk hoodie discount",
       "final_status": "resolved",
-      "outcome": "Closed from the shop's side. The owner approved $46.00 per unit, holding a $24.00 margin over the $22.00 cost, and the stored $58.00 list price was left untouched. Only 8 of the 20 units exist and the remaining 12 would cost $264.00 against $160.00 of cash, so the full order was not supplied.",
+      "outcome": "Closed from the shop's side. The owner approved $46.00 per unit for 20 hoodies - below the $58.00 list price, above the $22.00 unit cost, leaving $480.00 of total margin - and the stored list price was left untouched. Only 8 of the 20 are on hand and the shop cannot place a restock order, so the Yale AI Club has an agreed price rather than twenty hoodies.",
       "still_outstanding": "12 of the 20 hoodies are not in stock and were not ordered, so the agreed price covers an order the shop cannot yet supply in full.",
       "cash_effect": {
         "amount": 0.0,
         "direction": "none",
-        "what": "No payment. The price override was approved, but agreeing a price is not a purchase and moves no cash.",
-        "approval": "APR-D85EDD3A"
+        "what": "No payment. The price override was approved, but agreeing what to charge is not a purchase and moves no cash. Nothing in this shop brings money in, either.",
+        "approval": "APR-7ABAA5BF"
       },
       "agent_contributions": {
-        "boss": "Confirmed the owner's approved price, checked the stock shortfall itself, and closed the ticket from the shop's side with the 12 unfulfilled units written into its history.",
-        "customer_service": "Pulled $22.00 cost against $58.00 list and raised below-list price approval APR-D85EDD3A at $46.00 per unit. Changed no price and removed no stock.",
-        "inventory": "Confirmed 8 of the 20 size M hoodies on hand, and that Bulldog Print Co could cover the shortfall in five days if an order were placed and funded."
+        "boss": "Sent the discount question to Customer Service, who own anything a customer reads, and closed the ticket after the owner decided - recording that the price was settled but the stock was not.",
+        "customer_service": "Pulled the real numbers - $22.00 unit cost against $58.00 list - and proposed $46.00, which still holds a $24.00 margin per unit. Raised price-override approval APR-7ABAA5BF for the owner rather than changing any price, checked stock and found only 8 of 20 on hand, and saved customer draft DRAFT-52BEBA without sending it."
       },
       "agents_that_worked": [
         "boss",
-        "inventory"
+        "customer_service"
       ],
       "delegations": [
-        "boss -> inventory"
+        "boss -> customer_service"
       ],
       "mcp_tools_used": [
         "check_inventory_stock",
@@ -164,21 +167,20 @@
         "get_shop_date",
         "get_sku_pricing",
         "get_ticket",
-        "get_vendor_status",
-        "list_open_tickets",
-        "list_vendors",
+        "request_price_override_approval",
+        "save_draft_message",
         "update_ticket_status"
       ],
-      "agent_run": "RUN-20261012T052456-9377da",
-      "audit_steps_in_run": 37,
+      "agent_run": "RUN-20261012T202944-bd88a5",
+      "audit_steps_in_run": 33,
       "human_approvals": [
         {
-          "approval_id": "APR-D85EDD3A",
+          "approval_id": "APR-7ABAA5BF",
           "category": "decision",
           "kind": "price_override",
           "status": "approved",
           "decided_by": "Purnima Prasad",
-          "decided_on_utc": "2026-10-12T03:29:25+00:00",
+          "decided_on_utc": "2026-10-12T20:30:41+00:00",
           "amount": null,
           "proposed_unit_price": 46.0,
           "moved_cash": false

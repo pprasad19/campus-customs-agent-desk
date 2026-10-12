@@ -125,7 +125,7 @@ Check it is alive by opening <http://localhost:8000/> which lists every route.
 | Route | What it does |
 |---|---|
 | `GET /tickets` | The three tickets and whether each is open or resolved |
-| `POST /tickets/{id}/run` | Runs the five-agent team on one ticket |
+| `POST /tickets/{id}/run` | Runs the five-agent team on one ticket. Refuses a ticket that is already `resolved` or `refused` |
 | `GET /events` | Recent agent steps, so the board can show live progress |
 | `POST /approvals/{id}/approve` | **The only thing that moves cash** |
 | `POST /approvals/{id}/reject` | Turns a prepared payment or price down |
@@ -218,6 +218,11 @@ $2,400.00 for rent, finishing on **$160.00**.
 A ticket is `resolved` when **Campus Customs has done everything it can do today
 and no further move is available to it**. It does *not* claim the customer has
 their goods.
+
+`resolved` and `refused` are both **final**. Once a ticket reaches either, the
+agents cannot move it again — ringing the bell a second time on a closed ticket
+leaves it closed, and a refusal you signed is not something an agent can
+overturn on a later run. Only you can change a closed ticket, from the desk.
 
 That distinction matters on this board. All three tickets are resolved, but only
 the rent was genuinely delivered — the landlord has the money. The other two

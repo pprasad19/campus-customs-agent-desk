@@ -24,6 +24,15 @@ function useRolling(target: number | undefined) {
     previous.current = target;
     setDropping(target < from);
 
+    // A hidden tab gets no animation frames at all, so counting the balance
+    // there would leave it frozen on its old number — $0.00 on a fresh load.
+    // The drawer must always show the real balance, so skip straight to it.
+    if (document.hidden) {
+      setShown(target);
+      setDropping(false);
+      return;
+    }
+
     const startedAt = performance.now();
     const span = 850;
     let frame = 0;
@@ -35,7 +44,21 @@ function useRolling(target: number | undefined) {
       else setTimeout(() => setDropping(false), 700);
     };
     frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
+
+    // If the tab is hidden part-way through, the frames stop and the number
+    // would sit at whatever it had reached. Land it on the real figure.
+    const land = () => {
+      if (!document.hidden) return;
+      cancelAnimationFrame(frame);
+      setShown(target);
+      setDropping(false);
+    };
+    document.addEventListener("visibilitychange", land);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      document.removeEventListener("visibilitychange", land);
+    };
   }, [target]);
 
   return { shown, dropping };

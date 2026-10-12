@@ -240,7 +240,7 @@ return a `SpecialistFinding` (`backend/models.py`).
 | `pay_invoice` | `payments`, `invoices`, `cash_accounts` | **write** | Pays a vendor invoice. Refuses without human approval; refuses on overdraft. |
 | `pay_rent` | `payments`, `cash_accounts` | **write** | Pays one month's rent. Same two refusals. |
 | `reduce_inventory_for_sale` | `inventory` | **write** | Takes units off the shelf. Refuses to go negative. |
-| `update_ticket_status` | `tickets` | **write** | Records the real outcome and appends a dated note. |
+| `update_ticket_status` | `tickets` | **write** | Records the real outcome and appends a dated note. `resolved` and `refused` are terminal for agents — the tool refuses to move a ticket out of either, so ringing the bell again on a closed ticket cannot reopen it or undo the owner's refusal. |
 | `save_draft_message` | `desk` (read), drafts board | write (board) | Saves customer or vendor wording for a human. Sends nothing. |
 
 **Two things can wait on a person, and the board holds both.** A `payment`
@@ -355,7 +355,7 @@ between the database and everything else.
 | Route | What it does |
 |---|---|
 | `GET /tickets` | Returns all three tickets with `status`, plus `is_open` / `is_resolved` flags and the shop date. Reads `tickets` via the MCP tool `list_all_tickets`. |
-| `POST /tickets/{ticket_id}/run` | Runs the five-agent team on that one ticket and returns the resulting `ShiftReport`. Makes real `gpt-6-luna` calls; runs are serialised, so a second request gets `409` rather than racing the first. |
+| `POST /tickets/{ticket_id}/run` | Runs the five-agent team on that one ticket and returns the resulting `ShiftReport`. Makes real `gpt-6-luna` calls; runs are serialised, so a second request gets `409` rather than racing the first. A ticket already `resolved` or `refused` also gets `409`: re-running a refused ticket would let Accounting raise a fresh approval for the very bill the owner had just declined, and one signature would pay it. |
 | `GET /events` | Returns recent agent-loop steps — what each agent said and every tool it called — newest last, read from `output/audit_trail.json`. Supports `?limit=` and `?run_id=` so the board can refresh cheaply. |
 | `POST /approvals/{approval_id}/approve` | **The only thing that moves cash.** Records the human approval with the approver's name, then calls `pay_invoice` or `pay_rent` through MCP. Requires `approved_by`; the pay tool re-checks the approval and the balance and can still refuse. For a `decision` approval it settles the ticket with the agreed terms instead, and no cash moves. |
 | `POST /approvals/{approval_id}/reject` | Turns a prepared payment down. No cash moves. |
@@ -545,13 +545,16 @@ Selecting a ticket loads that ticket's own last run from the audit trail.
 ## 7. What the full run produced
 
 Reset to `$3,400.00`, then the team worked each ticket and three decisions went
-to a human, all approved.
+to a human, all approved. The runs behind this section are
+`RUN-20261012T202807-da743c` (101, 54 steps), `RUN-20261012T202843-350553`
+(102, 34 steps) and `RUN-20261012T202944-bd88a5` (103, 33 steps), all preserved
+in `output/audit_trail.json`.
 
 | Ticket | Final status | Agents | Cash |
 |---|---|---|---|
 | **101** tee order | `resolved` | Boss, Inventory, Accounting | **−$840.00** (invoice 501, approved) |
 | **102** rent | `resolved` | Boss, Facilities, Accounting | **−$2,400.00** (rent, approved) |
-| **103** discount | `resolved` | Boss, Customer Service, Inventory | $0.00 (price approved, not a purchase) |
+| **103** discount | `resolved` | Boss, Customer Service | $0.00 (price approved, not a purchase) |
 
 **$3,400.00 − $3,240.00 = $160.00**, matching `cash_accounts.balance` exactly.
 Two rows in `payments`, both naming the owner as approver, both dated on the
@@ -565,11 +568,13 @@ customer has their goods, and where something is still outstanding the ticket
 note says exactly what:
 
 - **101** — the debt is cleared and Bulldog Print Co is unblocked, but size S is
-  still at 0 and no reprint was ordered. The vendor's real reprint price is
-  recorded nowhere and only $160.00 of cash remains. Tauhid has no tee.
+  still at 0 and no reprint was ordered: the shop has no tool for placing a
+  vendor order, and only $160.00 of cash remains. Tauhid has no tee and was
+  never written to.
 - **103** — the $46.00 price is agreed, but only 8 of the 20 hoodies exist and
   the missing 12 would cost $264.00 against $160.00 of cash. The Yale AI Club has
-  a price, not twenty hoodies.
+  a price, not twenty hoodies. `DRAFT-52BEBA` names the shortfall honestly, but
+  was written before the owner's decision and has never been sent.
 - **102** — genuinely finished. The landlord has the money.
 
 `output/resolved_tickets.json` records this per ticket under `still_outstanding`,
@@ -593,14 +598,28 @@ as the floor under the discount on 103.
 
 **Wrong, or not deterministic:**
 
-1. **The mesh is mostly used as a star.** Nearly every delegation runs
-   Boss → specialist. An earlier run of ticket 102 did produce
-   Facilities → Accounting, so the capability works and the shape simply varies
-   between runs.
-2. **The Boss does much of the lookup itself**, delegating mainly what it cannot
-   do — the money and the price.
+1. **The mesh is mostly used as a star.** Every delegation in the final run is
+   Boss → specialist: `boss → inventory` and `boss → accounting` on 101,
+   `boss → facilities` and `boss → accounting` on 102, `boss → customer_service`
+   on 103. An earlier run of ticket 102 did produce Facilities → Accounting, so
+   the specialist-to-specialist capability works; the shape simply varies between
+   runs and the plan's predicted hand-offs are not guaranteed.
+2. **The Boss had to be stopped from doing the specialists' work.** Early runs
+   showed it reading the lease and raising the payment approval on 102 by itself,
+   with *zero* delegations, and on 103 re-calling
+   `request_price_override_approval` after Customer Service had already raised
+   one. The cause was structural: all five agents are handed the same 21 tools,
+   so delegating was never necessary — and the Boss prompt told it not to
+   delegate "a single lookup you could do yourself". The prompt now carries an
+   explicit ownership table (the lease is Facilities', payment approvals are
+   Accounting's, customer-facing prices and messages are Customer Service's,
+   stock is Inventory's) which the Boss must route even when it holds the tool,
+   plus a rule against re-calling a tool a specialist has already used. The run
+   recorded here is the result; the Boss now does only its own orientation calls.
 3. **Customer Service was never called on 101**, so the customer waiting on the
-   tee has still not been written to.
+   tee has still not been written to. On 103 it *did* save `DRAFT-52BEBA` naming
+   the shortfall — but before the owner decided, so the club was never told the
+   $46.00 was approved, and nothing in this shop sends a draft anyway.
 
 ### Artifacts from this run
 

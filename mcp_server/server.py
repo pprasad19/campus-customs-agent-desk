@@ -65,6 +65,10 @@ DRAFTS_PATH = OUTPUT_DIR / "drafts.json"
 # The original must never be written through this server.
 PROTECTED_DB_NAMES = {"campus_customs.db"}
 
+# Where a ticket's life ends. An agent cannot move a ticket out of either of
+# these on a later run; only the owner can, working at the desk.
+TERMINAL_TICKET_STATUSES = {"resolved", "refused"}
+
 mcp = FastMCP("campus-customs")
 
 
@@ -432,6 +436,29 @@ def request_payment_approval(
     if cash is None:
         return {"ok": False, "error": f"No cash account named {account!r}."}
 
+    # One request per obligation. Two agents can each decide a bill needs paying,
+    # or a re-run can ask again, and the owner would then be shown the same
+    # payment twice — with nothing to stop them approving both. An invoice is
+    # saved by its status flipping to `paid`, but a lease has no such field, so
+    # a duplicate rent approval really would pay the landlord twice.
+    for existing in _load_board(APPROVALS_PATH):
+        if (
+            existing.get("status") == "pending"
+            and existing.get("kind") == kind
+            and existing.get("ref_id") == ref_id
+        ):
+            return {
+                "ok": True,
+                "approval_id": existing["approval_id"],
+                "status": "pending",
+                "already_raised": True,
+                "note": (
+                    f"A payment of ${existing.get('amount', 0):,.2f} for {kind} #{ref_id} is already "
+                    f"waiting on the owner ({existing['approval_id']}). No second request was created. "
+                    "Do not raise this again; wait for the owner to decide."
+                ),
+            }
+
     approval_id = f"APR-{uuid.uuid4().hex[:8].upper()}"
     record = {
         "approval_id": approval_id,
@@ -679,6 +706,26 @@ def _execute_payment(
             }
 
         today = _shop_today(conn)
+
+        # Second line of defence. Even with a valid, unused approval in hand,
+        # the same obligation must not be settled twice on the same day. An
+        # invoice is already protected by its status, but rent is not.
+        already = conn.execute(
+            "SELECT id, amount FROM payments WHERE kind = ? AND ref_id = ? AND paid_at = ?",
+            (kind, ref_id, today.isoformat()),
+        ).fetchone()
+        if already is not None:
+            return {
+                "paid": False,
+                "refused": True,
+                "reason": (
+                    f"Refused: {kind} #{ref_id} was already paid today "
+                    f"(payment #{already['id']}, ${already['amount']:,.2f}). "
+                    "The shop does not pay the same obligation twice."
+                ),
+                "existing_payment_id": already["id"],
+            }
+
         cur = conn.execute(
             "INSERT INTO payments (kind, ref_id, amount, account, paid_at, approved_by) "
             "VALUES (?, ?, ?, ?, ?, ?)",
@@ -842,6 +889,11 @@ def update_ticket_status(ticket_id: int, status: str, note: str, updated_by: str
 
     The note is appended to the ticket's existing notes rather than overwriting
     them, so the ticket keeps its history.
+
+    `resolved` and `refused` are final. Once a ticket reaches either, this tool
+    will not move it again and you should leave it alone: a closed ticket is a
+    closed ticket, and a refusal was a person's decision, not yours to overturn.
+    Only the owner, working at the desk, can reopen one.
     """
     allowed = {"open", "waiting_on_approval", "waiting_on_vendor", "resolved", "refused"}
     if status not in allowed:
@@ -854,6 +906,26 @@ def update_ticket_status(ticket_id: int, status: str, note: str, updated_by: str
         ).fetchone()
         if row is None:
             return {"ok": False, "reason": f"No ticket with id {ticket_id}."}
+
+        # A closed ticket stays closed. `resolved` means the shop has run out of
+        # moves and `refused` means a person said no, so neither is an agent's to
+        # reverse on a later run. The desk stamps its own updates with
+        # "via the desk", which is how a human override gets through.
+        at_the_desk = "via the desk" in (updated_by or "")
+        if row["status"] in TERMINAL_TICKET_STATUSES and not at_the_desk:
+            return {
+                "ok": False,
+                "ticket_id": ticket_id,
+                "status_before": row["status"],
+                "status_after": row["status"],
+                "reason": (
+                    f"Ticket {ticket_id} is already '{row['status']}', which is final. "
+                    "A closed ticket is not reopened by an agent and a refusal is not "
+                    "overturned by one. Leave this ticket as it is and report that it "
+                    "was already closed. Only the owner can change it from the desk."
+                ),
+            }
+
         today = _shop_today(conn)
         stamped = f"[{today.isoformat()} {updated_by}] {note}"
         combined = f"{row['notes']}\n{stamped}" if row["notes"] else stamped

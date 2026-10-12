@@ -91,7 +91,7 @@ approve its own payment request.
 | `pay_invoice(invoice_id, approval_id, account)` | `payments`, `invoices`, `cash_accounts` | Pays a vendor invoice in full. Refuses without a human-approved `approval_id`; refuses if it would overdraw. Writes a `payments` row, lowers the balance, marks the invoice `paid`. |
 | `pay_rent(lease_id, approval_id, account)` | `payments`, `cash_accounts` | Pays one month's rent, with the amount taken from the lease so it cannot drift. Same two refusals. Leaves `leases` alone — it has no status or paid-through column. |
 | `reduce_inventory_for_sale(sku, size, qty, ticket_id)` | `inventory` | Takes units off the shelf to fulfil an order. Refuses to move more than are on hand. No cash is recorded, because revenue is not modelled. |
-| `update_ticket_status(ticket_id, status, note, updated_by)` | `tickets` | Moves a ticket to `open`, `waiting_on_approval`, `waiting_on_vendor`, `resolved` or `refused`, appending a dated note rather than overwriting history. |
+| `update_ticket_status(ticket_id, status, note, updated_by)` | `tickets` | Moves a ticket to `open`, `waiting_on_approval`, `waiting_on_vendor`, `resolved` or `refused`, appending a dated note rather than overwriting history. `resolved` and `refused` are final: the tool refuses to move a ticket out of either, so a second agent run cannot reopen a closed ticket or overturn a refusal. Only the desk, which stamps its updates `via the desk`, can. |
 | `save_draft_message(ticket_id, audience, subject, body, author)` | drafts board | Saves customer or vendor wording for a human to send. Marked `not_sent_draft_only`. Nothing leaves the building. |
 
 ### Approval and draft boards

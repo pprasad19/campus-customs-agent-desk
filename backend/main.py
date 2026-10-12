@@ -47,6 +47,9 @@ APPROVALS_PATH = OUTPUT_DIR / "approvals.json"
 
 # Agent runs are serialised. Two runs at once would interleave their writes to
 # the audit trail and race each other on the cash balance.
+# Where a ticket's life ends. The team is not run against either of these.
+TERMINAL_TICKET_STATUSES = {"resolved", "refused"}
+
 run_lock = asyncio.Lock()
 
 
@@ -141,6 +144,23 @@ async def run_ticket(ticket_id: int) -> dict[str, Any]:
     board = await link.call("get_ticket", ticket_id=ticket_id)
     if not board.get("found"):
         raise HTTPException(status_code=404, detail=f"No ticket with id {ticket_id}.")
+
+    # A closed ticket is not worked again. `resolved` means the shop ran out of
+    # moves and `refused` means the owner said no, and neither is an agent's to
+    # revisit. This is not only about wasted model calls: the duplicate-approval
+    # guard only catches a request that is still *pending*, so a run against a
+    # refused ticket could raise a fresh approval for a bill the owner had just
+    # declined, and paying it would be one signature away.
+    current = board.get("status")  # get_ticket returns the row flattened, not nested
+    if current in TERMINAL_TICKET_STATUSES:
+        raise HTTPException(
+            status_code=409,
+            detail=(
+                f"Ticket {ticket_id} is already '{current}' and will not be worked again. "
+                "A closed ticket is not reopened by the team, and a payment you declined is "
+                "not raised again. Reset the shop if you want to work it from the start."
+            ),
+        )
 
     if run_lock.locked():
         raise HTTPException(
@@ -304,11 +324,18 @@ async def _settle_ticket_for_payment(
 
     The two kinds settle differently, and the difference matters:
 
-    * **Rent** discharges the obligation outright. The rent notice is done.
-    * **An invoice** does not. Paying Bulldog Print Co clears the debt and
-      unblocks them, but the customer still has no tee — so that ticket moves to
-      `waiting_on_vendor`, not `resolved`. Marking it resolved would claim an
-      order was filled when nothing has shipped.
+    * **Rent** discharges the obligation outright, so its ticket is `resolved`:
+      the landlord has the money and nothing is left to do.
+    * **An invoice** unblocks a vendor rather than finishing a job, so the
+      outcome depends on a fact we can look up: is the stock there now? If it
+      is, the ticket returns to `open` so the team can fulfil it. If it is not,
+      the shop has no way to order more and has genuinely run out of moves, so
+      the ticket is `resolved` — closed from the shop's side, with the shortfall
+      and the unserved customer named in the note.
+
+    It never marks an invoice ticket `waiting_on_vendor`. That status means an
+    order has been placed and the shop is waiting on it, and paying a bill is
+    not placing an order.
     """
     kind, ref_id = record.get("kind"), record.get("ref_id")
     board = await link.call("list_all_tickets")
@@ -327,13 +354,43 @@ async def _settle_ticket_for_payment(
         match = next(
             (t for t in board.get("tickets", []) if t.get("invoice_id") == ref_id), None
         )
-        status = "waiting_on_vendor"
-        note = (
+        if match is None:
+            return None
+
+        paid = (
             f"Invoice {ref_id} settled for ${payment['amount']:,.2f} "
-            f"(payment #{payment['payment_id']}, approved by {approved_by}), so the "
-            "vendor is no longer blocked. The order itself is still outstanding until "
-            "stock arrives."
+            f"(payment #{payment['payment_id']}, approved by {approved_by}), so the vendor "
+            "is no longer blocked."
         )
+
+        # Paying the bill unblocks the vendor. Whether that finishes the ticket
+        # depends on something we can simply look up: is the stock there now?
+        need = match.get("qty") or 0
+        have = 0
+        if match.get("sku"):
+            stock = await link.call(
+                "check_inventory_stock", sku=match["sku"], size=match.get("size") or ""
+            )
+            have = stock.get("qty", 0) if stock.get("found") else 0
+
+        if match.get("sku") and have < need:
+            # The goods are not there, and this shop has no tool for placing a
+            # restock order, so there is genuinely nothing further it can do.
+            status = "resolved"
+            note = (
+                f"{paid} Only {have} of the {need} requested {match['sku']} "
+                f"{match.get('size') or ''} are in stock, and the shop has no way to place a "
+                "restock order, so it has run out of moves and the ticket is closed from its "
+                "side. The customer has not been served."
+            )
+        else:
+            # Stock is there: the order can now actually be filled, so the ticket
+            # goes back to the queue for the team to complete.
+            status = "open"
+            note = (
+                f"{paid} Stock is available, so this ticket is back in the queue to be "
+                "fulfilled."
+            )
     else:
         return None
 
@@ -470,6 +527,12 @@ async def _apply_decision(
     The outcome is written onto the ticket through the MCP server, so the terms
     the owner agreed to are part of the ticket's permanent history rather than
     living only on the approval board.
+
+    The ticket ends up `resolved` whether or not the stock covers the order,
+    because deciding the price is the last move the shop has: it cannot place a
+    restock order, so nothing further is available to it. Where the goods fall
+    short, the note records exactly how far, and says the customer has a price
+    rather than the goods.
     """
     import json
 
@@ -483,14 +546,19 @@ async def _apply_decision(
     )
     if record.get("short_by"):
         note += (
-            f" Note: only {record['qty_on_hand']} on hand, short by "
-            f"{record['short_by']} — the shortfall still needs sourcing."
+            f" Only {record['qty_on_hand']} of the {record['qty']} are on hand, short by "
+            f"{record['short_by']}, and the shop has no way to place a restock order, so it has "
+            "run out of moves. The customer has an agreed price, not the goods."
         )
 
     applied = await link.call(
         "update_ticket_status",
         ticket_id=ticket_id,
-        status="resolved" if record.get("can_supply_in_full") else "waiting_on_vendor",
+        # Always `resolved`: agreeing a price is the last move available to the
+        # shop either way. It is never `waiting_on_vendor`, because no order has
+        # been placed — and where stock is short the note says so plainly, so a
+        # closed ticket still cannot hide an unmet promise.
+        status="resolved",
         note=note,
         updated_by=f"{approved_by} (owner, via the desk)",
     )

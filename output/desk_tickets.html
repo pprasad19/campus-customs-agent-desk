@@ -366,7 +366,7 @@
     </div>
 
     <div class="card actual">
-      <h2>Actual <span class="pill grey">RUN-20261012T032350-21dc4a · 66 audit steps</span></h2>
+      <h2>Actual <span class="pill grey">RUN-20261012T202807-da743c · 54 audit steps</span></h2>
 
       <h3>Who worked it</h3>
       <p><b>Boss, Inventory and Accounting.</b> Facilities and Customer Service were correctly left out.</p>
@@ -382,7 +382,7 @@
           <div class="hop">Boss <code>ask_accounting</code> → Accounting</div>
           <div class="why">Weighed invoice 501 ($840.00, overdue) against the $3,400.00 balance <em>and</em>
           the rent also falling due — it called <code>get_lease_rent_due</code> to see the competing claim —
-          then raised payment approval <code>APR-8AF97D77</code>. Made no payment.</div>
+          then raised payment approval <code>APR-9B40C55B</code>. Made no payment.</div>
         </li>
       </ul>
 
@@ -395,19 +395,19 @@
       </p>
 
       <h3>Human decision</h3>
-      <p><code>APR-8AF97D77</code> — <b>$840.00</b>, invoice 501, <b>approved</b> by Purnima Prasad.
+      <p><code>APR-9B40C55B</code> — <b>$840.00</b>, invoice 501, <b>approved</b> by Purnima Prasad.
       Payment #1 executed: cash <b>$3,400.00 → $2,560.00</b>, <code>invoices.status</code> →
-      <code>paid</code>. The ticket moved to <code>waiting_on_vendor</code> at that moment, and was closed
-      as <code>resolved</code> in a later run once it was clear no reprint could be ordered.</p>
+      <code>paid</code>. The signature closed the ticket in the same moment: with the vendor unblocked and
+      no way to order a reprint, the shop had run out of moves, so the desk wrote the outcome into the
+      ticket's notes and set it to <code>resolved</code>.</p>
 
       <h3>Final status: <span class="pill ok">resolved</span></h3>
       <p>
         <b>Resolved here means closed from the shop's side</b> — everything Campus Customs could do today
         has been done, and no further move is available to it. It does <b>not</b> mean Tauhid has his tee.
-        A later run (<code>RUN-20261012T052414-ddee4c</code>) confirmed the debt was cleared and the vendor
-        unblocked, then closed the ticket with the outstanding work written into its history:
-        <code>CC-TEE-WHITE</code>/S is still at <b>0</b>, no reprint was ordered because the vendor's real
-        reprint price is recorded nowhere, and only $160.00 of cash remains.
+        The debt is cleared and Bulldog Print Co is unblocked, but the outstanding work is written into the
+        ticket's own history: <code>CC-TEE-WHITE</code>/S is still at <b>0</b>, no reprint was ordered
+        because the shop has no tool for placing a vendor order, and only $160.00 of cash remains.
       </p>
 
       <div class="cmp">
@@ -507,7 +507,7 @@
     </div>
 
     <div class="card actual">
-      <h2>Actual <span class="pill grey">RUN-20261012T032546-61677a · 36 audit steps</span></h2>
+      <h2>Actual <span class="pill grey">RUN-20261012T202843-350553 · 34 audit steps</span></h2>
 
       <h3>Who worked it</h3>
       <p><b>Boss, Facilities and Accounting.</b> Inventory and Customer Service were correctly left out.</p>
@@ -523,7 +523,7 @@
         <li>
           <div class="hop">Boss <code>ask_accounting</code> → Accounting</div>
           <div class="why">Judged affordability against the $3,400.00 balance alongside the other open
-          obligations and raised payment approval <code>APR-668147AF</code>. Made no payment.</div>
+          obligations and raised payment approval <code>APR-09122CCE</code>. Made no payment.</div>
         </li>
       </ul>
 
@@ -535,7 +535,7 @@
       </p>
 
       <h3>Human decision</h3>
-      <p><code>APR-668147AF</code> — <b>$2,400.00</b>, rent on lease 1, <b>approved</b> by Purnima Prasad.
+      <p><code>APR-09122CCE</code> — <b>$2,400.00</b>, rent on lease 1, <b>approved</b> by Purnima Prasad.
       Payment #2 executed: cash <b>$2,560.00 → $160.00</b>, ticket moved to <code>resolved</code>.</p>
 
       <h3>Final status: <span class="pill ok">resolved</span></h3>
@@ -651,23 +651,26 @@
     </div>
 
     <div class="card actual">
-      <h2>Actual <span class="pill grey">RUN-20261012T032618-ad82e3 · 33 audit steps</span></h2>
+      <h2>Actual <span class="pill grey">RUN-20261012T202944-bd88a5 · 33 audit steps</span></h2>
 
       <h3>Who worked it</h3>
       <p><b>Boss and Customer Service.</b> Accounting and Facilities were correctly left out — no money
-      moves for a discount. The Boss checked stock itself rather than asking Inventory.</p>
+      moves for a discount. Customer Service checked the stock itself as part of answering the question,
+      rather than the Boss doing it or a second delegation being spent on Inventory.</p>
 
       <h3>Delegations actually taken</h3>
       <ul class="chain">
         <li>
           <div class="hop">Boss <code>ask_customer_service</code> → Customer Service</div>
           <div class="why">Pulled <code>get_sku_pricing</code>: <b>$22.00 cost against $58.00 list</b>, and
-          raised below-list price approval <code>APR-D85EDD3A</code> at <b>$46.00 per unit</b> — a 21%
+          raised below-list price approval <code>APR-7ABAA5BF</code> at <b>$46.00 per unit</b> — a 21%
           discount holding a $24.00 margin. It changed no price and removed no stock.</div>
         </li>
       </ul>
-      <p class="selfserve">The Boss ran <code>check_inventory_stock</code> itself and found
-      <b>8 of the 20</b> size M hoodies on hand, a shortfall of 12.</p>
+      <p class="selfserve">Customer Service also ran <code>check_inventory_stock</code> and found
+      <b>8 of the 20</b> size M hoodies on hand, a shortfall of 12 — so the price it proposed was offered
+      with the shortfall already known, and saved customer draft <code>DRAFT-52BEBA</code> rather than
+      sending anything.</p>
 
       <h3>MCP tools actually called</h3>
       <p class="toolrow">
@@ -677,17 +680,17 @@
       </p>
 
       <h3>Human decision</h3>
-      <p><code>APR-D85EDD3A</code> — <b>$46.00 per unit × 20</b>, <b>approved</b> by Purnima Prasad.
+      <p><code>APR-7ABAA5BF</code> — <b>$46.00 per unit × 20</b>, <b>approved</b> by Purnima Prasad.
       <b>No cash moved</b>: agreeing a price is not a purchase. The terms were written into the ticket's
       history and the stored $58.00 list price was left unchanged.</p>
 
       <h3>Final status: <span class="pill ok">resolved</span></h3>
       <p>
         <b>Resolved here means closed from the shop's side.</b> The price is settled and the shop has no
-        further move: a later run (<code>RUN-20261012T052456-9377da</code>) confirmed the approved price and
-        closed the ticket with the shortfall written into its history. <b>8</b> units exist against the
-        <b>20</b> requested, and the missing 12 would cost <b>$264.00</b> against <b>$160.00</b> of cash, so
-        they were not ordered. The Yale AI Club has an agreed price, not twenty hoodies.
+        further move, so the desk closed the ticket with the shortfall written into its history.
+        <b>8</b> units exist against the <b>20</b> requested, and the missing 12 would cost <b>$264.00</b>
+        against <b>$160.00</b> of cash, so they were not ordered. The Yale AI Club has an agreed price,
+        not twenty hoodies.
       </p>
 
       <div class="cmp">
@@ -696,7 +699,7 @@
           <tr><th>Predicted</th><th>What happened</th><th></th></tr>
           <tr><td>Boss calls Customer Service first</td><td>It did</td><td class="hit">match</td></tr>
           <tr><td>Cost $22 / list $58 pulled before any price is named</td><td>Exactly that</td><td class="hit">match</td></tr>
-          <tr><td>Stock found at 8, short by 12</td><td>Exactly that — but the Boss checked, not Inventory</td><td class="miss">variance</td></tr>
+          <tr><td>Stock found at 8, short by 12</td><td>Exactly that — Customer Service checked it, not Inventory</td><td class="miss">variance</td></tr>
           <tr><td><b>Customer Service</b> → Inventory for the quantity</td><td>Inventory was never called</td><td class="miss">miss</td></tr>
           <tr><td>Accounting and Facilities not called</td><td>Not called</td><td class="hit">match</td></tr>
           <tr><td>No stored price is changed</td><td>List price still $58.00</td><td class="hit">match</td></tr>
@@ -741,7 +744,7 @@
             <b>Payment #1 — invoice 501 to Bulldog Print Co, paid in full.</b><br>
             The size S tee was out of stock and had to be reprinted, but the vendor would not ship while
             invoice 501 was unpaid and overdue, so clearing the debt was the only way to unblock them.
-            Approved by Purnima Prasad as <code>APR-8AF97D77</code>.
+            Approved by Purnima Prasad as <code>APR-9B40C55B</code>.
           </td>
           <td class="r out">−$840.00</td>
           <td class="r">$2,560.00</td>
@@ -751,7 +754,7 @@
           <td>
             <b>Payment #2 — one month's rent on lease 1 to Elm City Properties.</b><br>
             $2,400.00 taken from the lease record, due 2026-09-02. Approved by Purnima Prasad as
-            <code>APR-668147AF</code>. This is the payment that resolved its ticket outright.
+            <code>APR-09122CCE</code>. This is the payment that resolved its ticket outright.
           </td>
           <td class="r out">−$2,400.00</td>
           <td class="r">$160.00</td>
@@ -760,7 +763,7 @@
           <td><b>#103</b><br><span class="muted">price override</span></td>
           <td>
             <b>No payment, even though it was approved.</b> The owner approved a bulk price of $46.00 per
-            unit (<code>APR-D85EDD3A</code>), but agreeing a price is not a purchase: nothing was bought,
+            unit (<code>APR-7ABAA5BF</code>), but agreeing a price is not a purchase: nothing was bought,
             no stock moved, and the pricing table was never rewritten. Had all 20 units shipped at $46.00
             it would have <em>brought in</em> $920.00, but revenue is not modelled here, so the balance is
             unaffected either way.
@@ -837,7 +840,7 @@
           </p>
           <p class="did">
             <b>What the human was asked to decide:</b> Accounting put one request in front of the owner —
-            <code>APR-8AF97D77</code>, <b>$840.00</b> to settle Bulldog Print Co's bill. The agents did not
+            <code>APR-9B40C55B</code>, <b>$840.00</b> to settle Bulldog Print Co's bill. The agents did not
             and could not pay it themselves. It was <b>approved</b> by Purnima Prasad, and only then did the
             money leave: you can see the balance fall from $3,400.00 to $2,560.00 on the <b>Cash tab</b>.
             Had it been declined, nothing would have moved and the ticket would have been refused instead.
@@ -867,7 +870,7 @@
           </p>
           <p class="did">
             Accounting then confirmed the shop could afford it and raised one request for the owner —
-            <code>APR-668147AF</code>, <b>$2,400.00</b> — paying nothing until a person signed. It was
+            <code>APR-09122CCE</code>, <b>$2,400.00</b> — paying nothing until a person signed. It was
             <b>approved</b> by Purnima Prasad. The <b>Cash tab</b> shows the result: $2,400.00 out, taking
             the shop from $2,560.00 to $160.00. All three tickets are closed, but this is the only one where
             closing it also means the job is genuinely <em>done</em> — the landlord has the money.
@@ -888,29 +891,38 @@
             $58.00 and still leaves the shop <b>$24.00</b> per hoodie.
           </p>
           <p class="did">
-            <b>What the human was asked to decide:</b> <code>APR-D85EDD3A</code> — sell at $46.00 a hoodie
+            <b>What the human was asked to decide:</b> <code>APR-7ABAA5BF</code> — sell at $46.00 a hoodie
             instead of $58.00. It was <b>approved</b> by Purnima Prasad and moved <b>$0.00</b>, because
             agreeing a price is not a purchase. The <b>Cash tab</b> shows this line at zero while the other
             two tickets show money leaving. Nothing was bought and the shop's normal $58.00 price was left
             untouched for everyone else.
           </p>
           <p class="why">
-            <span class="why-k">The failure</span> there are only <b>8</b> hoodies in that size, not 20. The
-            price was put in front of the owner for all 20 as if finding the other 12 were a detail to sort
-            out later, and nothing was written to the Yale AI Club explaining the shortfall. Agreeing a price
-            for goods you do not have is a promise waiting to break.
+            <span class="why-k">The failure</span> there are only <b>8</b> hoodies in that size, not 20, and
+            the price was still put in front of the owner for all 20 as if finding the other 12 were a detail
+            to sort out later. Agreeing a price for goods you do not have is a promise waiting to break.
+            Customer Service did at least write the shortfall down — <code>DRAFT-52BEBA</code>, listed on
+            the <b>Ticket 103 tab</b>, tells the club plainly that only 8 are in stock, that 12 are
+            unavailable, and that there is no restock date. But that draft was written <em>before</em> the
+            owner decided, so it says the discount is "not approved yet", and nothing was written afterwards
+            to tell the club the $46.00 had in fact been approved. It is also marked
+            <code>not_sent_draft_only</code>, because nothing in this shop sends a message. The club has an
+            agreed price it has not been told about, and 12 hoodies nobody has given a date for.
           </p>
         </div>
 
         <p class="summing">
           <b>Overall — the three human approvals in one place:</b> ticket 101 raised
-          <code>APR-8AF97D77</code> for $840.00 (approved, cash moved), ticket 102 raised
-          <code>APR-668147AF</code> for $2,400.00 (approved, cash moved), and ticket 103 raised
-          <code>APR-D85EDD3A</code> for a $46.00 price (approved, no cash moved). That is one decision per
+          <code>APR-9B40C55B</code> for $840.00 (approved, cash moved), ticket 102 raised
+          <code>APR-09122CCE</code> for $2,400.00 (approved, cash moved), and ticket 103 raised
+          <code>APR-7ABAA5BF</code> for a $46.00 price (approved, no cash moved). That is one decision per
           ticket, every one of them taken by a person and none by an agent. The handling of money was
           flawless: look at the <b>Cash tab</b> — the agents paid for <b>nothing</b> on their own, both
-          payments happened only after a signature, and the final balance adds up exactly. The repeated
-          weakness is people: two customers were waiting, and neither was written to.
+          payments happened only after a signature, and the final balance adds up exactly. The weakness is
+          people. Two customers were waiting. The Yale AI Club at least got a draft naming the shortfall,
+          though it was never updated once the owner approved the price. Tauhid got nothing at all, after
+          the shop had spent $840.00 partly on his behalf. And neither has truly been contacted, because
+          a draft and a silence end in the same place here — nothing in this shop sends anything.
         </p>
       </div>
 
@@ -974,16 +986,16 @@
 
         <table class="cmp-table">
           <tr><th>Ticket</th><th>Times the AI had to think</th><th>Tools it used</th><th>Words it had to read and write</th><th>Hand-offs between agents</th></tr>
-          <tr><td>#101</td><td>12</td><td>28</td><td>262,095</td><td>2</td></tr>
-          <tr><td>#102</td><td>12</td><td>13</td><td>135,851</td><td>2</td></tr>
-          <tr><td>#103</td><td>8</td><td>13</td><td>117,207</td><td>1</td></tr>
+          <tr><td>#101</td><td>13</td><td>22</td><td>237,768</td><td>2</td></tr>
+          <tr><td>#102</td><td>12</td><td>12</td><td>148,263</td><td>2</td></tr>
+          <tr><td>#103</td><td>9</td><td>13</td><td>125,600</td><td>1</td></tr>
         </table>
 
         <p class="did">
           Every hand-off starts a whole second conversation. The other agent has to be told the situation
           from scratch, look things up, think, and report back — and all of that reading and writing is what
-          you pay for. Ticket 101 needed <b>262,000 words</b> of reading and writing to reach a conclusion
-          one agent could have reached using the <em>same 28 tools</em>, because the Boss already has access
+          you pay for. Ticket 101 needed <b>238,000 words</b> of reading and writing to reach a conclusion
+          one agent could have reached using the <em>same 22 tools</em>, because the Boss already has access
           to every tool the specialists have. On these three tickets, asking a specialist bought no new
           ability — only extra time and cost.
         </p>
