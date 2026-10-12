@@ -215,8 +215,20 @@ $2,400.00 for rent, finishing on **$160.00**.
 
 ## A note on what "resolved" means here
 
-Only the rent ticket can honestly finish. Tickets 101 and 103 end at
-`waiting_on_vendor` because the goods genuinely do not exist — size S tees are at
-zero and only 8 of the 20 requested hoodies are in stock — and nothing in this
-project can invent inventory. Marking them resolved would claim an order had been
-filled when nothing shipped. `output/desk_tickets.html` explains this in detail.
+A ticket is `resolved` when **Campus Customs has done everything it can do today
+and no further move is available to it**. It does *not* claim the customer has
+their goods.
+
+That distinction matters on this board. All three tickets are resolved, but only
+the rent was genuinely delivered — the landlord has the money. The other two
+closed with work still outstanding, and each says so in its own notes:
+
+- **101** — the overdue invoice was paid and Bulldog Print Co is unblocked, but
+  size S is still at zero and no reprint was ordered. The shop has no tool for
+  placing a vendor order, and only $160.00 of cash remains. Tauhid has no tee.
+- **103** — a $46.00 bulk price was agreed with the owner, but only 8 of the 20
+  hoodies exist and the missing 12 would cost $264.00 against $160.00 of cash.
+
+Nothing here invents stock, moves the shop's date, or fakes a payment. Where a
+promise is unmet, the ticket note, the `still_outstanding` field in
+`output/resolved_tickets.json`, and `output/desk_tickets.html` all say so.

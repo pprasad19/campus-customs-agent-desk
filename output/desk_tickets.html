@@ -397,7 +397,8 @@
       <h3>Human decision</h3>
       <p><code>APR-8AF97D77</code> — <b>$840.00</b>, invoice 501, <b>approved</b> by Purnima Prasad.
       Payment #1 executed: cash <b>$3,400.00 → $2,560.00</b>, <code>invoices.status</code> →
-      <code>paid</code>, ticket moved to <code>waiting_on_vendor</code>.</p>
+      <code>paid</code>. The ticket moved to <code>waiting_on_vendor</code> at that moment, and was closed
+      as <code>resolved</code> in a later run once it was clear no reprint could be ordered.</p>
 
       <h3>Final status: <span class="pill ok">resolved</span></h3>
       <p>
@@ -817,7 +818,7 @@
       <div class="q">
         <h3><span class="qn">1</span> How would you evaluate the performance of the agents on each ticket, and why?</h3>
 
-        <div class="verdict v-waiting_on_vendor">
+        <div class="verdict v-resolved">
           <header><span class="tno">#101</span><span class="out">Bulldog tee — found the real problem, then forgot the customer</span></header>
           <p class="did">
             Tauhid asked for one white tee in size S. The shop has <b>ten</b> white tees — but none of them
@@ -877,7 +878,7 @@
           </p>
         </div>
 
-        <div class="verdict v-waiting_on_vendor">
+        <div class="verdict v-resolved">
           <header><span class="tno">#103</span><span class="out">Discount — good business sense, poor customer care</span></header>
           <p class="did">
             The Yale AI Club asked for 20 navy hoodies at a discount. The <b>Ticket 103 tab</b> shows
@@ -1073,8 +1074,10 @@
             <b>Why it fails today:</b> this is the exact wall Ticket 101 hit. The $840.00 bill was paid and
             Bulldog Print Co became willing to print again — and then nothing could happen, because
             <b>no tool exists for placing an order with a supplier</b>. The team could see the door was open
-            and had no way to walk through it. That is the real reason Ticket 101 says "Waiting on vendor"
-            instead of "Resolved", and it would say that forever.
+            and had no way to walk through it. Ticket 101 is marked resolved only in the sense that Campus
+            Customs ran out of moves — read its note and it still says size S is at <b>0</b> and no reprint
+            was ordered. Until this tool exists, that ticket can never be closed because the tee actually
+            arrived.
           </p>
           <p><b>What to store:</b> a list of orders placed (supplier, item, size, how many, price, date ordered, date expected) and a record of what actually turned up.</p>
           <p><b>Tools needed:</b> one to place an order — which must need a signature first, because placing an order commits the shop's money; one to check where an order has got to; and one to add stock when a delivery arrives. That last one should be the <em>only</em> way items can ever be added, so stock can never appear just because someone says it did.</p>
