@@ -270,7 +270,7 @@ async def approve_payment(approval_id: str, body: ApproveRequest) -> dict[str, A
     record["approved_by"] = body.approved_by
     record["decided_on"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
     record["decision_note"] = body.note
-    APPROVALS_PATH.write_text(json.dumps(records, indent=2) + "\n", encoding="utf-8")
+    _write_approvals(records)
 
     # A decision is not a payment. Approving a price override moves no cash; it
     # settles the ticket with the agreed terms written into its history. The
@@ -432,7 +432,7 @@ async def reject_payment(approval_id: str, body: RejectRequest) -> dict[str, Any
     record["rejected_by"] = body.rejected_by
     record["decided_on"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
     record["decision_note"] = body.note
-    APPROVALS_PATH.write_text(json.dumps(records, indent=2) + "\n", encoding="utf-8")
+    _write_approvals(records)
 
     # A declined discount is still an answer the ticket deserves to carry.
     if record.get("category") == "decision":
@@ -575,7 +575,7 @@ async def _apply_decision(
     for r in records:
         if r.get("approval_id") == record["approval_id"]:
             r["applied_to_ticket"] = ticket_id
-    APPROVALS_PATH.write_text(json.dumps(records, indent=2) + "\n", encoding="utf-8")
+    _write_approvals(records)
 
     balance = await link.call("get_cash_balance", account="checking")
     return {
@@ -592,6 +592,22 @@ async def _apply_decision(
         "balance_after": balance.get("balance"),
         "note": "No cash moved. A discount is a pricing decision, not a payment.",
     }
+
+
+def _write_approvals(records: list[dict[str, Any]]) -> None:
+    """Save the approval board without ever leaving it half-written.
+
+    A plain write truncates the file first, so a crash in the middle would
+    leave invalid JSON where the record of who signed what used to be.
+    Renaming into place is atomic, so a reader sees either the old board or
+    the new one, never a partial one.
+    """
+    import json
+    import os
+
+    tmp = APPROVALS_PATH.with_name(APPROVALS_PATH.name + ".writing")
+    tmp.write_text(json.dumps(records, indent=2) + "\n", encoding="utf-8")
+    os.replace(tmp, APPROVALS_PATH)
 
 
 def _load_approvals() -> list[dict[str, Any]]:

@@ -15,6 +15,7 @@ What gets recorded, per step:
 from __future__ import annotations
 
 import json
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -95,7 +96,18 @@ class AuditTrail:
                     "preserved_copy": broken.name,
                 }]
         existing.append(record)
-        self.path.write_text(json.dumps(existing, indent=2) + "\n", encoding="utf-8")
+
+        # Written to a sibling temp file, then renamed into place. A plain write
+        # truncates the file and refills it, leaving the trail unreadable for as
+        # long as that takes — and at a few megabytes that window is real. A
+        # Ctrl-C landing inside it would leave invalid JSON, and the recovery
+        # path above would then start a fresh list and lose every step ever
+        # recorded. os.replace is atomic on Windows and POSIX alike, so a reader
+        # sees either the old file or the new one, never a half-written one.
+        # Nothing about the format on disk changes.
+        tmp = self.path.with_name(self.path.name + ".writing")
+        tmp.write_text(json.dumps(existing, indent=2) + "\n", encoding="utf-8")
+        os.replace(tmp, self.path)
 
     # -- extracting agent-loop steps ---------------------------------------
 

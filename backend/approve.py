@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sqlite3
 import sys
 from datetime import datetime, timezone
@@ -34,7 +35,11 @@ def _load() -> list[dict]:
 
 def _save(records: list[dict]) -> None:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    APPROVALS_PATH.write_text(json.dumps(records, indent=2) + "\n", encoding="utf-8")
+    # Rename into place: a plain write truncates first, so a crash mid-write
+    # would leave invalid JSON where the signed decisions used to be.
+    tmp = APPROVALS_PATH.with_name(APPROVALS_PATH.name + '.writing')
+    tmp.write_text(json.dumps(records, indent=2) + "\n", encoding="utf-8")
+    os.replace(tmp, APPROVALS_PATH)
 
 
 def _shop_date() -> str:

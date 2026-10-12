@@ -132,17 +132,30 @@ def _load_board(path: Path) -> list[dict[str, Any]]:
     return raw if isinstance(raw, list) else [raw]
 
 
+def _write_board_atomic(path: Path, records: list[dict[str, Any]]) -> None:
+    """Write a board without ever leaving it half-written.
+
+    A plain write truncates the file first, so a crash in the middle leaves
+    invalid JSON where the record of signed decisions used to be. Writing to a
+    sibling temp file and renaming is atomic on Windows and POSIX alike: a
+    reader sees either the old board or the new one, never a partial one.
+    """
+    tmp = path.with_name(path.name + ".writing")
+    tmp.write_text(json.dumps(records, indent=2) + "\n", encoding="utf-8")
+    os.replace(tmp, path)
+
+
 def _append_board(path: Path, record: dict[str, Any]) -> None:
     """Append one record. Existing records are never dropped."""
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     records = _load_board(path)
     records.append(record)
-    path.write_text(json.dumps(records, indent=2) + "\n", encoding="utf-8")
+    _write_board_atomic(path, records)
 
 
 def _replace_board(path: Path, records: list[dict[str, Any]]) -> None:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(records, indent=2) + "\n", encoding="utf-8")
+    _write_board_atomic(path, records)
 
 
 # ==========================================================================

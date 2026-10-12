@@ -20,3 +20,7 @@ Thumbs.db
 # NOTE: data/*.db is deliberately NOT ignored.
 # Both the original database and the working copy are committed on purpose so
 # the app can be cloned and run without any setup step.
+
+# Temp files from an atomic board write. These exist only for the instant
+# between writing and renaming into place, and never need committing.
+*.writing
