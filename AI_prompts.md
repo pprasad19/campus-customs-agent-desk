@@ -32,6 +32,8 @@ Now we will be going to Problem 3. An MCP server in mcp_server/ should be writte
 
 I also forgot to tell you that do not write vague lines like "reads inventory" in the output/harness.md file. Such responses will be scored low by my graders. The tools should be tied to the ticket.
 
+*Importance:* the first write-up only named which table each tool read, which never showed what the tool actually did for that ticket.
+
 ## Problem 4 - Add the MCP server to vibe coder and test each tool
 
 ### Initial Prompts
