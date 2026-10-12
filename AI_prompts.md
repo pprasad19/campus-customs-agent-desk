@@ -138,5 +138,10 @@ None was needed.
 
 ### Initial Prompts
 
+Now we will be moving to Problem 11. The code now needs to be pushed to a public GitHub repository so that my graders can clone it. The repo URL is what I will need to be submitting. The repo URL should also be put in output/github_url.txt. Please keep in mind that the real .env file should not be pushed to the GitHub repo. Both database files should be included under data/ (the original and working copy) so that my graders can run the app easily. Now I will be telling you the expected file layout: AI_prompts.md, requirements.txt, .env.example, .gitignore, .mcp.json, README.md, data/campus_customs.db, data/campus_customs_new.db, mcp_server/server.py, mcp_server/README.md, frontend/, backend/main.py, backend/models.py, backend/prompts/boss.md, backend/prompts/inventory.md, backend/prompts/accounting.md, backend/prompts/facilities.md, backend/prompts/customer_service.md, output/harness.md, output/mcp_smoke.json, output/desk_tickets.html, output/design.md, output/resolved_tickets.json, output/resolved_board.html, output/audit_trail.json, and output/github_url.txt.
+
+The README should explain all of the following: copy original DB to the working copy when you need a clean run, start FastAPI backend, start MCP server, start the React board, and reset the DB before a full 3-ticket run.
+
 ### Follow-up Prompt
 
+None was needed.
