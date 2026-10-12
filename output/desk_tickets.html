@@ -674,9 +674,10 @@
 
       <h3>MCP tools actually called</h3>
       <p class="toolrow">
-        <code>get_shop_date</code> <code>get_ticket</code> <code>list_open_tickets</code>
-        <code>get_cash_balance</code> <code>get_sku_pricing</code> <code>check_inventory_stock</code>
-        <code>request_price_override_approval</code> <code>update_ticket_status</code>
+        <code>get_shop_date</code> <code>get_ticket</code> <code>get_cash_balance</code>
+        <code>get_sku_pricing</code> <code>check_inventory_stock</code>
+        <code>request_price_override_approval</code> <code>save_draft_message</code>
+        <code>update_ticket_status</code>
       </p>
 
       <h3>Human decision</h3>
@@ -706,6 +707,7 @@
           <tr><td>No <code>reduce_inventory_for_sale</code></td><td>None called; stock untouched at 8</td><td class="hit">match</td></tr>
           <tr><td>No discount at or below the $22 cost</td><td>$46.00 approved, $24.00 margin</td><td class="hit">match</td></tr>
           <tr><td>A named price with its margin, left for the owner</td><td>Raised as a signable decision, and approved</td><td class="hit">match</td></tr>
+          <tr><td>A draft to the club naming the price and the availability caveat</td><td><code>DRAFT-52BEBA</code> saved: 8 in stock, 12 unavailable, no restock date</td><td class="hit">match</td></tr>
         </table>
         <p class="lesson"><b>The honest finding.</b> The pricing judgement matched the plan almost exactly,
         and the friction point the plan predicted proved real: when this was first built there was no way
@@ -951,7 +953,7 @@
           <tr>
             <td><b>#103</b></td>
             <td>Customer Service leads, looks up cost before naming a price, and asks Inventory whether 20 exist</td>
-            <td>All of that except Inventory was never asked — the Boss counted the hoodies itself</td>
+            <td>All of that except Inventory was never asked — Customer Service counted the hoodies itself</td>
             <td class="part">judgement right, staffing wrong</td>
           </tr>
         </table>
