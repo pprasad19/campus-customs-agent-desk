@@ -61,6 +61,7 @@ cp -f data/campus_customs.db data/campus_customs_new.db
 |---|---|---|
 | `get_shop_date()` | `desk` | What is today, for the shop. Every due-date and overdue judgement uses this. |
 | `list_open_tickets()` | `tickets` | What work is outstanding — the team's inbox. |
+| `list_all_tickets()` | `tickets` | Every ticket whatever its status, open or already dealt with. The dashboard reads the board through this one, so a closed ticket still shows with its outcome rather than vanishing. |
 | `get_ticket(ticket_id)` | `tickets` | One ticket, with its `sku`/`size`/`qty` and its linked `lease_id`/`invoice_id`. |
 | `check_inventory_stock(sku, size)` | `inventory` | Units on hand for one SKU **and** size, plus the aisle. |
 | `get_sku_pricing(sku)` | `pricing` | `unit_cost`, `list_price`, and the margin between them. |
