@@ -370,15 +370,15 @@
       <h3>3. MCP tools I expect this ticket to use</h3>
       <table>
         <tr><th>Tool</th><th>Called by</th><th>Expected result</th></tr>
-        <tr><td><code>get_ticket</code></td><td>Boss</td><td>Ticket 101 with <code>sku</code>, <code>size</code>, <code>invoice_id 501</code></td></tr>
-        <tr><td><code>check_inventory_stock</code></td><td>Inventory</td><td><code>CC-TEE-WHITE</code>/S → <b>qty 0</b>, Aisle B</td></tr>
+        <tr><td><code>get_ticket</code></td><td>Boss</td><td>The ticket itself: one white tee, size S, linked to bill 501</td></tr>
+        <tr><td><code>check_inventory_stock</code></td><td>Inventory</td><td><b>None in stock</b> in size S (the shelf is Aisle B)</td></tr>
         <tr><td><code>list_vendors</code></td><td>Inventory</td><td>Bulldog Print Co identified as the apparel vendor</td></tr>
-        <tr><td><code>get_vendor_status</code></td><td>Inventory</td><td>vendor 1 → <b><code>can_ship: false</code></b>, blocked by invoice 501, lead 5 days</td></tr>
-        <tr><td><code>get_invoice</code></td><td>Accounting</td><td>#501 → $840.00, <b>overdue by 3 days</b></td></tr>
-        <tr><td><code>get_cash_balance</code></td><td>Accounting</td><td>$3,400.00 — and $2,400 rent also pending</td></tr>
-        <tr><td><code>request_payment_approval</code></td><td>Accounting</td><td>$840 invoice request → status <b>pending</b></td></tr>
-        <tr><td><code>save_draft_message</code></td><td>Customer Service</td><td>Draft to Tauhid, <code>not_sent_draft_only</code></td></tr>
-        <tr><td><code>update_ticket_status</code></td><td>Boss</td><td>101 → <code>waiting_on_approval</code></td></tr>
+        <tr><td><code>get_vendor_status</code></td><td>Inventory</td><td>Bulldog Print Co <b>will not ship</b> while bill 501 is unpaid; five days once they will</td></tr>
+        <tr><td><code>get_invoice</code></td><td>Accounting</td><td>Bill 501 is $840.00 and <b>three days overdue</b></td></tr>
+        <tr><td><code>get_cash_balance</code></td><td>Accounting</td><td>$3,400.00 in the account, with $2,400 of rent also coming</td></tr>
+        <tr><td><code>request_payment_approval</code></td><td>Accounting</td><td>A $840 request put in front of the owner, <b>waiting</b> for a decision</td></tr>
+        <tr><td><code>save_draft_message</code></td><td>Customer Service</td><td>A reply to Tauhid, saved but not sent</td></tr>
+        <tr><td><code>update_ticket_status</code></td><td>Boss</td><td>Ticket 101 marked as waiting on the owner</td></tr>
       </table>
 
       <div class="nope">
@@ -514,12 +514,12 @@
       <h3>3. MCP tools I expect this ticket to use</h3>
       <table>
         <tr><th>Tool</th><th>Called by</th><th>Expected result</th></tr>
-        <tr><td><code>get_ticket</code></td><td>Boss</td><td>Ticket 102 with <code>lease_id 1</code>, no amount</td></tr>
-        <tr><td><code>get_lease_rent_due</code></td><td>Facilities</td><td>$2,400.00, due 2026-09-02, <code>days_until_due: 2</code>, not overdue</td></tr>
+        <tr><td><code>get_ticket</code></td><td>Boss</td><td>The ticket itself: linked to the lease, with no amount on it</td></tr>
+        <tr><td><code>get_lease_rent_due</code></td><td>Facilities</td><td>$2,400.00 due 2026-09-02 — two days away, <b>not late</b></td></tr>
         <tr><td><code>get_cash_balance</code></td><td>Facilities or Accounting</td><td>$3,400.00</td></tr>
-        <tr><td><code>get_invoice</code></td><td>Accounting</td><td>#501 → $840.00, the competing obligation</td></tr>
-        <tr><td><code>request_payment_approval</code></td><td>Accounting</td><td>$2,400 rent request → status <b>pending</b></td></tr>
-        <tr><td><code>update_ticket_status</code></td><td>Boss</td><td>102 → <code>waiting_on_approval</code></td></tr>
+        <tr><td><code>get_invoice</code></td><td>Accounting</td><td>Bill 501 at $840.00, the other call on the same account</td></tr>
+        <tr><td><code>request_payment_approval</code></td><td>Accounting</td><td>A $2,400 rent request put to the owner, <b>waiting</b> for a decision</td></tr>
+        <tr><td><code>update_ticket_status</code></td><td>Boss</td><td>Ticket 102 marked as waiting on the owner</td></tr>
       </table>
 
       <div class="nope">
@@ -651,12 +651,12 @@
       <h3>3. MCP tools I expect this ticket to use</h3>
       <table>
         <tr><th>Tool</th><th>Called by</th><th>Expected result</th></tr>
-        <tr><td><code>get_ticket</code></td><td>Boss</td><td>Ticket 103 → <code>qty 20</code>, size M, no linked ids</td></tr>
-        <tr><td><code>get_sku_pricing</code></td><td>Customer Service</td><td><code>CC-HOOD-NAVY</code> → cost $22.00, list $58.00, margin $36.00</td></tr>
-        <tr><td><code>check_inventory_stock</code></td><td>Inventory</td><td><code>CC-HOOD-NAVY</code>/M → <b>qty 8</b>, short by 12</td></tr>
-        <tr><td><code>get_vendor_status</code></td><td>Inventory</td><td>vendor 1 → still <code>can_ship: false</code> — the same block as ticket 101</td></tr>
+        <tr><td><code>get_ticket</code></td><td>Boss</td><td>The ticket itself: 20 hoodies in size M, with no bill or lease attached</td></tr>
+        <tr><td><code>get_sku_pricing</code></td><td>Customer Service</td><td>The shop pays $22.00 and sells at $58.00, so $36.00 a hoodie at full price</td></tr>
+        <tr><td><code>check_inventory_stock</code></td><td>Inventory</td><td><b>8 in stock</b> in size M — twelve short of the twenty asked for</td></tr>
+        <tr><td><code>get_vendor_status</code></td><td>Inventory</td><td>Bulldog Print Co <b>still will not ship</b> — the same unpaid bill as ticket 101</td></tr>
         <tr><td><code>save_draft_message</code></td><td>Customer Service</td><td>Draft to Yale AI Club with a named price and an honest availability caveat</td></tr>
-        <tr><td><code>update_ticket_status</code></td><td>Boss</td><td>103 → <code>waiting_on_approval</code> (awaiting the owner’s price decision)</td></tr>
+        <tr><td><code>update_ticket_status</code></td><td>Boss</td><td>Ticket 103 marked as waiting on the owner's decision about the price</td></tr>
       </table>
 
       <div class="callout">
