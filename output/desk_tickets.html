@@ -101,6 +101,22 @@
   .hop code { background: #eef2f6; padding: 1px 6px; border-radius: 4px; font-size: 13px; }
   .why { color: var(--muted); font-size: 13.5px; margin-top: 3px; }
 
+  /* Inside a reflection question, a .why paragraph is not a footnote: it is the
+     judgement the question actually asks for - what went wrong, what was fair,
+     what it means. Styled small and grey it read as an aside, so here it gets
+     body size, body colour and a rule down the side. The .why paragraphs in the
+     ticket tabs above are genuinely supporting detail and stay as they are. */
+  .q .why {
+    color: var(--ink);
+    font-size: 15px;
+    margin-top: 12px;
+    padding: 11px 15px 11px 14px;
+    background: #f1f5f9;
+    border-left: 3px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+  }
+  .q .why-k { font-weight: 700; color: var(--accent); }
+
   table { border-collapse: collapse; width: 100%; font-size: 13.5px; margin-top: 6px; }
   th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
   th { color: var(--muted); font-weight: 600; font-size: 12.5px; text-transform: uppercase; letter-spacing: .4px; }
@@ -860,12 +876,12 @@
             declined, nothing would have moved and the ticket would have been refused.
           </p>
           <p class="why">
-            <span class="why-k">The failure</span> nobody wrote to Tauhid. The shop spent $840.00 partly
+            <span class="why-k">The failure:</span> nobody wrote to Tauhid. The shop spent $840.00 partly
             on his behalf and sent him not one word. There was a tool for writing to customers. It was not
             used.
           </p>
           <p class="why">
-            <span class="why-k">To be fair</span> the tee was never reaching Tauhid that day anyway. The
+            <span class="why-k">To be fair:</span> the tee was never reaching Tauhid that day anyway. The
             next step was ordering the reprint, and <b>I never built them a tool for ordering from a
             supplier</b>. That gap is mine. The ticket says <b>resolved</b> because the shop ran out of
             things it could do, not because anyone got a shirt.
@@ -887,7 +903,7 @@
             closing it also means the job is genuinely <em>done</em>.
           </p>
           <p class="why">
-            <span class="why-k">Why this one worked</span> everything it needed was something the shop could
+            <span class="why-k">Why this one worked:</span> everything it needed was something the shop could
             actually do. Paying rent requires no goods to exist.
           </p>
         </div>
@@ -908,7 +924,7 @@
             The normal $58.00 price was left alone for everyone else.
           </p>
           <p class="why">
-            <span class="why-k">The failure</span> only <b>8</b> hoodies exist, not 20, and the price still
+            <span class="why-k">The failure:</span> only <b>8</b> hoodies exist, not 20, and the price still
             went to the owner for all 20. Customer Service did write the shortfall down — the draft on the
             <b>Ticket 103 tab</b> says 8 in stock, 12 not, no restock date. But it was written
             <em>before</em> the decision, so it says the discount is "not approved yet", and nothing was
@@ -970,7 +986,7 @@
           only handed over what it was not permitted to do: spending money and setting a price.
         </p>
         <p class="why">
-          <span class="why-k">Worth knowing</span> the team does not behave identically every time. An
+          <span class="why-k">Worth knowing:</span> the team does not behave identically every time. An
           earlier run of ticket 102 skipped Facilities completely; a later one used it exactly as predicted.
           Same instructions, same data, different staffing. So nobody should claim "the team always works
           this way."
@@ -1004,7 +1020,7 @@
           back. And an agent that was busy working showed on screen as "not called".
         </p>
         <p class="why">
-          <span class="why-k">The thing that actually matters</span> is that the five agents are
+          <span class="why-k">The thing that actually matters:</span> the five agents are
           <b>not</b> what keeps the money safe. The tools do that: no payment without a signature, each
           signature good once and only for that bill, amounts read from the records rather than typed by
           the AI, and anything that would overdraw refused. <b>One agent using those same tools would be
