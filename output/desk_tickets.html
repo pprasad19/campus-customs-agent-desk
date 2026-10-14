@@ -349,7 +349,7 @@
         <li>
           <div class="hop"><b>Inventory</b> asked <b>Accounting</b> <span class="pill grey">one specialist asking another</span></div>
           <div class="why">Unblocking the printer is a money problem and Inventory has no say over money.
-          I want it to name the actual blocker — bill 501, $840 — not just report a dead end. Accounting
+          I want it to name the actual blocker — the $840 the shop owes Bulldog Print Co — not just report a dead end. Accounting
           should then weigh it against the rent also coming due, and ask a person for permission. It must
           not pay anything itself.</div>
         </li>
@@ -370,11 +370,11 @@
       <h3>3. MCP tools I expect this ticket to use</h3>
       <table>
         <tr><th>Tool</th><th>Called by</th><th>Expected result</th></tr>
-        <tr><td><code>get_ticket</code></td><td>Boss</td><td>The ticket itself: one white tee, size S, linked to bill 501</td></tr>
+        <tr><td><code>get_ticket</code></td><td>Boss</td><td>The ticket itself: one white tee, size S, linked to the unpaid printer's bill</td></tr>
         <tr><td><code>check_inventory_stock</code></td><td>Inventory</td><td><b>None in stock</b> in size S (the shelf is Aisle B)</td></tr>
         <tr><td><code>list_vendors</code></td><td>Inventory</td><td>Bulldog Print Co identified as the apparel vendor</td></tr>
-        <tr><td><code>get_vendor_status</code></td><td>Inventory</td><td>Bulldog Print Co <b>will not ship</b> while bill 501 is unpaid; five days once they will</td></tr>
-        <tr><td><code>get_invoice</code></td><td>Accounting</td><td>Bill 501 is $840.00 and <b>three days overdue</b></td></tr>
+        <tr><td><code>get_vendor_status</code></td><td>Inventory</td><td>Bulldog Print Co <b>will not ship</b> while that bill is unpaid; five days once they will</td></tr>
+        <tr><td><code>get_invoice</code></td><td>Accounting</td><td>The bill is $840.00 and <b>three days overdue</b></td></tr>
         <tr><td><code>get_cash_balance</code></td><td>Accounting</td><td>$3,400.00 in the account, with $2,400 of rent also coming</td></tr>
         <tr><td><code>request_payment_approval</code></td><td>Accounting</td><td>A $840 request put in front of the owner, <b>waiting</b> for a decision</td></tr>
         <tr><td><code>save_draft_message</code></td><td>Customer Service</td><td>A reply to Tauhid, saved but not sent</td></tr>
@@ -411,7 +411,7 @@
         <li>
           <div class="hop"><b>Boss</b> asked <b>Inventory</b></div>
           <div class="why">Checked the exact size, found <b>none</b>, and worked out that Bulldog Print
-          Co is the only printer for this shirt and will not ship while bill 501 is unpaid.</div>
+          Co is the only printer for this shirt and will not ship while its bill goes unpaid.</div>
         </li>
         <li>
           <div class="hop"><b>Boss</b> asked <b>Accounting</b></div>
@@ -430,7 +430,7 @@
       </p>
 
       <h3>What the owner was asked to decide</h3>
-      <p>One request: pay <b>$840.00</b> to settle bill 501. I <b>approved</b> it and the
+      <p>One request: pay <b>$840.00</b> to settle the printer's bill. I <b>approved</b> it and the
       balance went from <b>$3,400.00 to $2,560.00</b>. That also ended the ticket — with the printer
       unblocked there was nothing further the shop could do, since it cannot place a reprint order.</p>
 
@@ -517,7 +517,7 @@
         <tr><td><code>get_ticket</code></td><td>Boss</td><td>The ticket itself: linked to the lease, with no amount on it</td></tr>
         <tr><td><code>get_lease_rent_due</code></td><td>Facilities</td><td>$2,400.00 due 2026-09-02 — two days away, <b>not late</b></td></tr>
         <tr><td><code>get_cash_balance</code></td><td>Facilities or Accounting</td><td>$3,400.00</td></tr>
-        <tr><td><code>get_invoice</code></td><td>Accounting</td><td>Bill 501 at $840.00, the other call on the same account</td></tr>
+        <tr><td><code>get_invoice</code></td><td>Accounting</td><td>The $840.00 owed to the printer on ticket 101 — the other call on the same account</td></tr>
         <tr><td><code>request_payment_approval</code></td><td>Accounting</td><td>A $2,400 rent request put to the owner, <b>waiting</b> for a decision</td></tr>
         <tr><td><code>update_ticket_status</code></td><td>Boss</td><td>Ticket 102 marked as waiting on the owner</td></tr>
       </table>
